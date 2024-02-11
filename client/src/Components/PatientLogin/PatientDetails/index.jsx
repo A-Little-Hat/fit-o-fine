@@ -54,7 +54,7 @@ const PatientDetails = (props) => {
 
                     recordThyroid.push(
                         pdata[j]["test_name"], pdata[j]['report_date'], pdata[j]['T3'], pdata[j]['T4'], pdata[j]['thyroid_stimulating_hormone'], pdata[j]['des'],
-                        html(`<a href='http://localhost:3000/view?hospital=${props.pid.split('#')[1]}&testName=Thyroid&name=${props.pid.split('#')[0]}&T3=${pdata[j]['T3']}&T4=${pdata[j]['T4']}&tsh=${pdata[j]['thyroid_stimulating_hormone']}&description=${pdata[j]['des']}&date=${pdata[j]['report_date']},pid=${props.pid}'>View</a>
+                        html(`<a href='http://localhost:3000/view?hospital=${props.pid.split('#')[1]}&testName=Thyroid&name=${props.pid.split('#')[0]}&T3=${pdata[j]['T3']}&T4=${pdata[j]['T4']}&tsh=${pdata[j]['thyroid_stimulating_hormone']}&description=${pdata[j]['des']}&date=${pdata[j]['report_date']},pid=${props.pid}'  target="_blank" >View</a>
                         `)
                     )
                 }

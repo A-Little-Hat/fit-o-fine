@@ -17,8 +17,9 @@ const Home = () => {
               <DocGraphics />
             </div>
           </div>
-          <div className="row second">
+          <div className="second">
             <p>Services</p>
+            <div className="row">
             <section id="featured-services" className="featured-services">
               <div className="container" data-aos="fade-up">
 
@@ -59,8 +60,9 @@ const Home = () => {
 
               </div>
             </section>
+            </div>
           </div>
-          <div className="row third">
+          <div className="third">
 
             <section id="about" className="about">
               <div className="container" data-aos="fade-up">
@@ -108,9 +110,9 @@ const Home = () => {
           {/* <div className="container-fluid"> */}
 
 
-          <div className="row nameSection" >
+          {/* <div className="nameSection" >
             <h2>Contact</h2>
-            </div>
+            </div> */}
           </div>
         </div >
       </>

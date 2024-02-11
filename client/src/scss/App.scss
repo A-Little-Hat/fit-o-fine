@@ -5,12 +5,12 @@ body,
 #root {
     margin: 0;
     padding: 0;
-    width: 100%;
+    // width: 100%;
     min-height: 100vh;
 }
 .loading-wrapper {
     background-color: #edf2f6;
-    width: 100%;
+    // width: 100%;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -28,7 +28,7 @@ body,
 }
 
 .login-container {
-    width: 100%;
+    // width: 100%;
     height: 100%;
     background-color: white;
     .card-wrapper {
@@ -41,7 +41,7 @@ body,
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: rgb(222, 255, 250);
     border-radius: 1rem;
     .left-image-wrapper {
         width: 40%;

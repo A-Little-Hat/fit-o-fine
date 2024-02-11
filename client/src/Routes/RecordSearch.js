@@ -524,7 +524,7 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
                   
                 <button className="btn btn-lr btn-primary" type="submit" >
                 Search  
-            </button>
+                </button>
           
             (click two times to see result)
           

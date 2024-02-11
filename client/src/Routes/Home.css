@@ -283,8 +283,8 @@
 
 .nameSection{
   background-color:rgb(149, 255, 246);
-  height:100vh  ;
-  width: 100vw;
+  height:100vh;
+  width: 100%;
 }
 
 /* card section */

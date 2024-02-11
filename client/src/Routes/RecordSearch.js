@@ -36,8 +36,13 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
     const [dataHemoglobin, setDataHemoglobin] = useState([]);
     const [dataThyroid, setDataThyroid] = useState([]);
 
-
+    // const clicked=(e)=>{
+    //   e.preventDefault()
+    //   handleOnSubmit(e)
+    //   handleOnSubmit(e)
+    // }
     const handleOnSubmit = async (e) => {
+      if(selectedValue!==''){
       e.preventDefault();
       if(selectedValue==='Patient Id & Report Date')
       {
@@ -398,12 +403,12 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
 
         }//end of test name
 
-       
+      } // if block
     }// end of handlesubmit
     
     return (
         <>
-        <form onSubmit={handleOnSubmit}>
+        <form >
             <Navbar />
             <div className="container my-4">
                 <div className="card">
@@ -522,11 +527,11 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
                 </div>
                 
                   
-                <button className="btn btn-lr btn-primary" type="submit" >
+                <button id="scam" className="btn btn-lr btn-primary" onClick={handleOnSubmit} >
                 Search  
                 </button>
           
-            (click two times to see result)
+            {/* (click two times to see result) */}
           
             {data && data.length===0 && (
               <>

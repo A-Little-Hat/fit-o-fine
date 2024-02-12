@@ -4,7 +4,7 @@ import './Chatbot.css';
 
 const Chatbot = ({ chatToggle }) => {
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState([{ text: 'Welcome to Fit-o-Fine', user: false }]);
+  const [messages, setMessages] = useState([{ text: 'Fit-o-Fine 💊🩺🧑‍⚕️', user: false }]);
 
 
   const getAnswer = async () => {

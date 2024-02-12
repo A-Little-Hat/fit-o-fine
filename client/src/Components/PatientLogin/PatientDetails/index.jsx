@@ -3,6 +3,8 @@ import { Grid } from "gridjs-react";
 import axios from "axios";
 import { html } from "gridjs";
 import './index.css'
+import Chatbot from '../../Chatbot'
+import chatIcon from './chatbot.gif'
 
 const PatientDetails = (props) => {
     const [pdata, setData] = useState();
@@ -11,7 +13,13 @@ const PatientDetails = (props) => {
     const [dataRBC, setDataRBC] = useState([]);
     const [dataHemoglobin, setDataHemoglobin] = useState([]);
     const [dataThyroid, setDataThyroid] = useState([]);
+    const[isChat,setIsChat]=useState(false)
 
+    const chatToggle=(e)=>{
+        e.preventDefault()
+        setIsChat(!isChat)
+        console.log(isChat)
+    }
 
 
     const a = async () => {
@@ -90,6 +98,8 @@ const PatientDetails = (props) => {
 
     return (
         <>
+        {isChat ? <Chatbot chatToggle={chatToggle} /> : (
+            <React.Fragment>
             <div className="pNav nav nav-fill nav-pills">
             <p className="nav-item">{props.pid}</p>
             <button className="nav-item" onClick={() => { props.setIsAuth(false) }}>logout</button>
@@ -221,7 +231,11 @@ const PatientDetails = (props) => {
                 )}
 
             </div>
-
+            <button className='chatButtonOn' onClick={chatToggle}>
+                <img src={chatIcon} alt="Chat Button" />
+            </button>
+            </React.Fragment>
+        )}
         </>
     )
 }

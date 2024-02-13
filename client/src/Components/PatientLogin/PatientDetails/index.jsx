@@ -7,6 +7,8 @@ import Chatbot from '../../Chatbot'
 import chatIcon from './chatbot.gif'
 
 const PatientDetails = (props) => {
+
+
     const [pdata, setData] = useState();
     const [isLoad, setIsLoad] = useState(true)
     const [dataCBC, setDataCBC] = useState([]);
@@ -15,6 +17,10 @@ const PatientDetails = (props) => {
     const [dataThyroid, setDataThyroid] = useState([]);
     const[isChat,setIsChat]=useState(false)
 
+
+    const logout=()=>{
+        props.setIsAuth(false)
+    }
     const chatToggle=(e)=>{
         e.preventDefault()
         setIsChat(!isChat)
@@ -102,7 +108,7 @@ const PatientDetails = (props) => {
             <React.Fragment>
             <div className="pNav nav nav-fill nav-pills">
             <p className="nav-item">{props.pid}</p>
-            <button className="nav-item" onClick={() => { props.setIsAuth(false) }}>logout</button>
+            <button className="nav-item" onClick={logout }>logout</button>
             </div>
 
             {!isLoad && pdata && pdata.length === 0 && (

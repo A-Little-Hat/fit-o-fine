@@ -20,13 +20,16 @@ import PatientLogin from './Components/PatientLogin'
 import "react-toastify/dist/ReactToastify.css";
 
 import About from "./Routes/About";
+import React,{ useState } from "react";
 function App() {
     console.log("app")
+
+
     return (
         <>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About/>}/>
+                <Route path="/about" element={<About />} />
                 <Route element={<AuthProvider />}>
 
                     <Route path="/profile" element={<Profile />} />
@@ -37,15 +40,15 @@ function App() {
                         <Route path="/org-request" element={<Request />} />
                         <Route path="/view-org" element={<ViewOrg />} />
                     </Route>
-                     </Route>
-                     <Route path="/add-patient" element={<AddPatient/>}/>
-                     <Route path="/search" element={<RecordSearch/>}/>
-                     <Route path="/view-patient" element={<Patient/>}/>
-                     <Route path="/new-patient" element={<NewPatient/>}/>
-                     <Route path="/view" element={<Report/>} />  
+                </Route>
+                <Route path="/add-patient" element={<AddPatient />} />
+                <Route path="/search" element={<RecordSearch />} />
+                <Route path="/view-patient" element={<Patient />} />
+                <Route path="/new-patient" element={<NewPatient />} />
+                <Route path="/view" element={<Report />} />
 
-                     
-                    <Route path="/PatientLogin" element={<PatientLogin />} />
+
+                <Route path="/PatientLogin" element={<PatientLogin />} />
                 <Route path="/login" element={<Login />} />
             </Routes>
         </>

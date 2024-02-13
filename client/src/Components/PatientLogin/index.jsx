@@ -4,6 +4,7 @@ import axios from "axios"
 import PatientDetails from './PatientDetails';
 import Navbar from '../Navbar';
 const PatientLogin = () => {
+
   const [id, setId] = useState("")
   const [org, setOrg] = useState("")
   const [isAuth, setIsAuth] = useState(false)
@@ -37,7 +38,7 @@ const PatientLogin = () => {
   }
   return (
     <React.Fragment>
-      <Navbar/>
+      <Navbar isAuth={isAuth} />
       {isAuth?<PatientDetails setIsAuth={setIsAuth} pid={id} /> :<div className="body">
       {/* {isAuth?<><p>hello</p><button onClick={()=>{setIsAuth(false)}}>logout</button></>:<div className="body"> */}
     <div className="wrapper">

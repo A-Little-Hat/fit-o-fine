@@ -13,6 +13,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+// mongoose.connect('mongodb+srv://root:root@cluster0.7yhmbar.mongodb.net/?retryWrites=true&w=majority',{useNewurlParser:true});
 mongoose.connect('mongodb://127.0.0.1:27017/healthlab',{useNewurlParser:true});
 
 const userSchema=new mongoose.Schema({
@@ -263,30 +264,54 @@ app.post('/insertrbc', async(req, res) => {
 
   app.post('/inserttestname',async(req,res)=>{
 
-    const testName=req.body.tname;
-    const org=req.body.org_name;
-    const a=String(testName)
-    console.log(a)
-    if(a=="CBC"){
-     const  data=await search.find({test_name:testName,organization_name:org})
-     console.log(data)
-     res.json(data);
-    }
-    else if(a=="RBC"){
-     const x=await search.find({rbc:{$gt:0},organization_name:org})
-     console.log(x)
-     res.json(x)
-    }
-    else if(a==='HEMOGLOBIN'){
-      const x=await search.find({hemoglobin:{$gt:0},organization_name:org})
-     console.log(x)
-     res.json(x)
-    }
-    else if(a.toUpperCase()==='THYROID'){
-      const x=await search.find({test_name:testName,organization_name:org})
-     console.log(x)
-     res.json(x)
-    }
+
+  const fieldList = {
+    hemoglobin:['Hemoglobin','CBC'],
+    cbc:['CBC'],
+    rbc:['rbc','CBC'],
+    hct:['CBC'],
+    mcv:['CBC'],
+    mch:['CBC'],
+    mchc:['CBC'],
+    rdw_cv:['CBC'],
+    tlc:['CBC'],
+    t3:['Thyroid'],
+    t4:['Thyroid'],
+    thyroid_stimulating_hormone:['Thyroid'],
+    thyroid:['Thyroid'],
+  }
+    let testName=req.body.tname;
+    let org=req.body.org_name;
+    
+    let result = await Patient.find({test_name:{$in:fieldList[testName]}, organization_name:org})
+    console.log({testName})
+    console.log({result})
+    res.json(result);
+
+    // const result = await Patient.find({ organization_name:org, test_name: { $exists: true }});
+    //  const  data=await search.find({test_name:testName,organization_name:org});
+
+    // if(a==="CBC"){
+    //  const  data=await search.find({test_name:testName,organization_name:org})
+    //  console.log(data)
+    //  res.json(data);
+    // }
+    // else if(a==="RBC"){
+    //  const x=await search.find({rbc:{$gt:0},organization_name:org})
+    //  console.log(x)
+    //  res.json(x)
+    // }
+    // else if(a==='HEMOGLOBIN'){
+    //   const x=await search.find({hemoglobin:{$gt:0},organization_name:org})
+    //  console.log(x)
+    //  res.json(x)
+    // }
+    // // else if(a.toUpperCase()==='THYROID'){
+    // else if(a==='THYROID'){
+    //   const x=await search.find({test_name:testName,organization_name:org})
+    //  console.log(x)
+    //  res.json(x)
+    // }
   });
   app.post('/searchpatientid',async(req,res)=>{
 

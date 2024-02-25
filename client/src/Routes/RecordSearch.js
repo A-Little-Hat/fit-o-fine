@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import {  useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Navbar from "../Components/Navbar";
 // import { Grid } from "gridjs-react";
@@ -38,6 +38,10 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
           setTestName(test.target.value);
         };
     const [data, setData] = useState([]);
+    useEffect(() => {
+      setData([])
+    }, [test_name,selectedValue])
+    
     // const [dataCBC, setDataCBC] = useState([]);
     // const [dataRBC, setDataRBC] = useState([]);
     // const [dataHemoglobin, setDataHemoglobin] = useState([]);
@@ -534,16 +538,15 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
                 </div>
                 
                   
-                <button id="scam" className="btn btn-lr btn-primary" onClick={handleOnSubmit} >
+                <button className="btn btn-lr btn-primary" onClick={handleOnSubmit} >
                 Search  
                 </button>
           
-            {/* (click two times to see result) */}
           
             {data && data.length===0 ?
               <>
                 <center>
-                  <p className="m-10">No Records Found</p>
+                  <p className="m-10">Nothing to show</p>
                 </center>
               </>:
               <>

@@ -3,6 +3,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useSearchParams } from "react-router-dom";
 
+const searchParams = new URLSearchParams(window.location.search);
+
 
 const Report = () => {
 
@@ -19,7 +21,7 @@ const Report = () => {
     let T4=0
     let tsh=0
 
-    let [searchParams, setSearchParams] = useSearchParams();
+    // let [searchParams, setSearchParams] = useSearchParams();
     // let name = searchParams.get("name")
     let organization_name = searchParams.get("organization_name")
     let patient_id = searchParams.get("patient_id")

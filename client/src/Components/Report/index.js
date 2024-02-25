@@ -2,15 +2,11 @@ import React,{ useState } from 'react'
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useSearchParams } from "react-router-dom";
-// import Hemoglobin from './Hemoglobin.jsx';
-// import Rbc from './Rbc.jsx';
-// import Cbc from './Cbc.jsx';
-// import Thyroid from './Thyroid.jsx';
 
 
 const Report = () => {
 
-    let hemoglobinValue=0
+    let hemoglobin=0
     let rbcValue=0
     let rbc=0
     let hct=0
@@ -24,37 +20,36 @@ const Report = () => {
     let tsh=0
 
     let [searchParams, setSearchParams] = useSearchParams();
-    let name = searchParams.get("name")
-    let hospitalName = searchParams.get("hospital")
-    if(hospitalName==='undefined'){
-        hospitalName='Fit-O-Fine'
-    }
-    let testName = searchParams.get("testName")
-    let pid = searchParams.get("pid")
-    let date = searchParams.get("date")
-    let description = searchParams.get("description")
+    // let name = searchParams.get("name")
+    let organization_name = searchParams.get("organization_name")
+    let patient_id = searchParams.get("patient_id")
+    let test_name = searchParams.get("test_name")
+    let report_date = searchParams.get("report_date")
+    let des = searchParams.get("des")
 
-    if(testName === 'Hemoglobin'){
-        hemoglobinValue = searchParams.get("Hemoglobin")
+    // values
+
+    if(test_name === 'Hemoglobin'){
+        hemoglobin = searchParams.get("hemoglobin")
     }
-    if(testName === 'RBC'){
-        rbcValue = searchParams.get("rbc")
-    }
-    if(testName === 'CBC'){
-        hemoglobinValue=searchParams.get("Hemoglobin")
-        rbc=searchParams.get('rbc')
-        hct=searchParams.get('hct')
-        mcv=searchParams.get('mcv')
-        mch=searchParams.get('mch')
-        mchc=searchParams.get('mchc')
-        rdw_cv=searchParams.get('rdw_cv')
-        tlc=searchParams.get('tlc')
-    }
-    if(testName === 'Thyroid'){
-        T3=searchParams.get('T3')
-        T4=searchParams.get('T4')
-        tsh=searchParams.get('tsh')
-    }
+    // if(test_name === 'RBC'){
+    //     rbcValue = searchParams.get("rbc")
+    // }
+    // if(test_name === 'CBC'){
+    //     hemoglobin=searchParams.get("Hemoglobin")
+    //     rbc=searchParams.get('rbc')
+    //     hct=searchParams.get('hct')
+    //     mcv=searchParams.get('mcv')
+    //     mch=searchParams.get('mch')
+    //     mchc=searchParams.get('mchc')
+    //     rdw_cv=searchParams.get('rdw_cv')
+    //     tlc=searchParams.get('tlc')
+    // }
+    // if(test_name === 'Thyroid'){
+    //     T3=searchParams.get('T3')
+    //     T4=searchParams.get('T4')
+    //     tsh=searchParams.get('tsh')
+    // }
 
     const downloadPDF = () => {
         const capture = document.getElementById("print");
@@ -75,46 +70,47 @@ const Report = () => {
                     <div className="container" style={{"border":"thick solid #010116","minHeight":"50vh"}}>
                     <div className="row">
                         <div className="md-col-12">
-                            <div className="container" id="hosName">Hostpital Name: {hospitalName} </div>
+                            <div className="container" id="hosName">Hostpital Name: {organization_name} </div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="md-col-12">
-                            <div className="container" id="patientName">patient Name: {name}</div>
+                            <div className="container" id="patientName">patient ID: {patient_id}</div>
                         </div>
                     </div>
                     <hr />
                     <hr />
                     <div className="row">
                         <div className="md-col-12">
-                            <div className="container" id="testName">Test Name: {testName} || Date: {date}</div>
+                            <div className="container" id="test_name">Test Name: {test_name} || Date: {report_date}</div>
                         </div>
                     </div>
                     <hr />
                     <hr />
                     {/* {Hemoglobin} */}
-                    {testName&&testName==='Hemoglobin'&&
+                    {test_name && test_name==='Hemoglobin' &&
                     <div className="row">
                     <div className="md-col-4"></div>
                     <div className="md-col-4" id="dataInput">
-                        <b>hymoglobin : </b> <span>{hemoglobinValue}</span>
+                        <b>hymoglobin : </b> <span>{hemoglobin}</span>
                         <br />
-                        <b>Comment : </b> <span>{description}</span>
+                        <b>Comment : </b> <span>{des}</span>
                     </div>
                     <div className="md-col-4"></div>
                     </div>}
-                    {/* {RBC} */}
-                    {testName&&testName==='RBC'&&
+
+                    {/* {RBC}
+                    {test_name&&test_name==='RBC'&&
                     <div className="row">
                     <div className="md-col-4"></div>
                     <div className="md-col-4" id="dataInput">
                         <b>CBC : </b> <span>{rbcValue}</span>
                         <br />
-                        <b>Comment : </b> <span>{description}</span>
+                        <b>Comment : </b> <span>{des}</span>
                     </div>
                     <div className="md-col-4"></div>
                 </div>}
-                    {testName&&testName==='CBC'&&
+                    {test_name&&test_name==='CBC'&&
                     <div className="row">
                     <div className="md-col-4"></div>
                     <div className="md-col-4" id="dataInput">
@@ -129,7 +125,7 @@ const Report = () => {
                     <div className="md-col-4"></div>
                     </div>
                     }
-                    {testName&&testName==='Thyroid'&&
+                    {test_name&&test_name==='Thyroid'&&
                     <div className="row">
                     <div className="md-col-4"></div>
                     <div className="md-col-4" id="dataInput">
@@ -139,8 +135,9 @@ const Report = () => {
                     </div>
                     <div className="md-col-4"></div>
                     </div>}
+                    */}
                 </div>
-            </div>
+            </div> 
             <button className="receipt-modal-download-button" onClick={downloadPDF}>Download</button>
         </div>
             )

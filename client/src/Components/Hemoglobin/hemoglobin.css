@@ -1,0 +1,23 @@
+p{
+    font-size: xx-large;
+}
+
+td{
+    font-size: large;
+    font-weight: 300;
+    padding-right: 30px;
+    border: 2px solid;
+}
+
+thead td{
+    font-size: x-large;
+    background-color: rgb(189, 238, 248);
+}
+table{
+    border: 2px solid;
+}
+
+.main{
+    overflow-y: scroll;
+}
+

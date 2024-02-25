@@ -1,10 +1,17 @@
 import {  useState } from "react";
 import { connect } from "react-redux";
 import Navbar from "../Components/Navbar";
-import { Grid } from "gridjs-react";
-import { html } from "gridjs";
-import "gridjs/dist/theme/mermaid.css";
+// import { Grid } from "gridjs-react";
+// import { html } from "gridjs";
+// import "gridjs/dist/theme/mermaid.css";
 import { Dropdown } from "react-bootstrap";
+
+import Hemoglobin from "../Components/Hemoglobin";
+import RBC from '../Components/RBC'
+import CBC from '../Components/CBC'
+import Thyroid from '../Components/Thyroid'
+
+
 // import moment from "moment";
 import axios from "axios";
 const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
@@ -31,10 +38,10 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
           setTestName(test.target.value);
         };
     const [data, setData] = useState([]);
-    const [dataCBC, setDataCBC] = useState([]);
-    const [dataRBC, setDataRBC] = useState([]);
-    const [dataHemoglobin, setDataHemoglobin] = useState([]);
-    const [dataThyroid, setDataThyroid] = useState([]);
+    // const [dataCBC, setDataCBC] = useState([]);
+    // const [dataRBC, setDataRBC] = useState([]);
+    // const [dataHemoglobin, setDataHemoglobin] = useState([]);
+    // const [dataThyroid, setDataThyroid] = useState([]);
 
     // const clicked=(e)=>{
     //   e.preventDefault()
@@ -53,88 +60,88 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
                 org_name:user.name
             })
             setData(fetchdata.data)
-            console.log(fetchdata.data)
-            let accounts = await window.ethereum.request({
-              method: "eth_accounts",
-          });
-            let patients =  await orgContract.contract.methods
-            .getPatients()
-            .call({ form: accounts[0] });
-            let recordCBC=[];
-            let recordRBC=[];
-            let recordHemoglobin=[];
-            let recordThyroid=[];
+      //       console.log(fetchdata.data)
+      //       let accounts = await window.ethereum.request({
+      //         method: "eth_accounts",
+      //     });
+      //       let patients =  await orgContract.contract.methods
+      //       .getPatients()
+      //       .call({ form: accounts[0] });
+      //       let recordCBC=[];
+      //       let recordRBC=[];
+      //       let recordHemoglobin=[];
+      //       let recordThyroid=[];
             
             
-            for(let i=0;i<patients.length;i++)
-          {
-            for(let j=0;j<data.length;j++)
-            {
-              if(patients[i]['pid']===data[j]['patient_id'])
-              {
-                if(data[j]['test_name']==='CBC')
-                {
-                recordCBC.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],  
-                patients[i]['email'],
-                data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['rbc'],data[j]['hct'],
-                data[j]['mcv'],data[j]['mch'],data[j]['mchc'],data[j]['rdw_cv'],
-                data[j]['tlc'],data[j]['des'],
-                html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=CBC&name=${patients[i]["patient_name"]}&Hemoglobin=${data[j]['hemoglobin']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}&rbc=${data[j]['rbc']}&hct=${data[j]['hct']}&mcv=${data[j]['mcv']}&mch=${data[j]['mch']}&mchc=${data[j]['mchc']}&rdw_cv=${data[j]['rdw_cv']}&tlc=${data[j]['tlc']}'>View</a>
-                  `)
-                )
-                }
+      //       for(let i=0;i<patients.length;i++)
+      //     {
+      //       for(let j=0;j<data.length;j++)
+      //       {
+      //         if(patients[i]['pid']===data[j]['patient_id'])
+      //         {
+      //           if(data[j]['test_name']==='CBC')
+      //           {
+      //           recordCBC.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],  
+      //           patients[i]['email'],
+      //           data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['rbc'],data[j]['hct'],
+      //           data[j]['mcv'],data[j]['mch'],data[j]['mchc'],data[j]['rdw_cv'],
+      //           data[j]['tlc'],data[j]['des'],
+      //           html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=CBC&name=${patients[i]["patient_name"]}&Hemoglobin=${data[j]['hemoglobin']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}&rbc=${data[j]['rbc']}&hct=${data[j]['hct']}&mcv=${data[j]['mcv']}&mch=${data[j]['mch']}&mchc=${data[j]['mchc']}&rdw_cv=${data[j]['rdw_cv']}&tlc=${data[j]['tlc']}'>View</a>
+      //             `)
+      //           )
+      //           }
           
-                if(data[j]['test_name']==='RBC')
-                {
+      //           if(data[j]['test_name']==='RBC')
+      //           {
 
-                  recordRBC.push( patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                patients[i]['email'],
-                data[j]["test_name"],data[j]['report_date'],data[j]['rbc'],data[j]['des'],
-                html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Hemoglobin&name=${patients[i]["patient_name"]}&rbc=${data[j]['rbc']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
-                  `)
-                  )
+      //             recordRBC.push( patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+      //           patients[i]['email'],
+      //           data[j]["test_name"],data[j]['report_date'],data[j]['rbc'],data[j]['des'],
+      //           html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Hemoglobin&name=${patients[i]["patient_name"]}&rbc=${data[j]['rbc']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
+      //             `)
+      //             )
                  
-                }
+      //           }
                 
                 
-                if(data[j]['test_name']==='Hemoglobin')
-                {
+      //           if(data[j]['test_name']==='Hemoglobin')
+      //           {
                   
-                  recordHemoglobin.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                  patients[i]['email'],
-                  data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['des'],
-                  html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Hemoglobin&name=${patients[i]["patient_name"]}&Hemoglobin=${data[j]['hemoglobin']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
-                  `)
-                  )
-                }
-                if(data[j]['test_name']==='Thyroid')
-                {
+      //             recordHemoglobin.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+      //             patients[i]['email'],
+      //             data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['des'],
+      //             html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Hemoglobin&name=${patients[i]["patient_name"]}&Hemoglobin=${data[j]['hemoglobin']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
+      //             `)
+      //             )
+      //           }
+      //           if(data[j]['test_name']==='Thyroid')
+      //           {
                   
-                  recordThyroid.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                  patients[i]['email'],
-                  data[j]["test_name"],data[j]['report_date'],data[j]['T3'],data[j]['T4'],data[j]['thyroid_stimulating_hormone'],data[j]['des'],
-                  html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Thyroid&name=${patients[i]["patient_name"]}&T3=${data[j]['T3']}&T4=${data[j]['T4']}&tsh=${data[j]['thyroid_stimulating_hormone']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
-                  `)
-                  )
-                }
+      //             recordThyroid.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+      //             patients[i]['email'],
+      //             data[j]["test_name"],data[j]['report_date'],data[j]['T3'],data[j]['T4'],data[j]['thyroid_stimulating_hormone'],data[j]['des'],
+      //             html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Thyroid&name=${patients[i]["patient_name"]}&T3=${data[j]['T3']}&T4=${data[j]['T4']}&tsh=${data[j]['thyroid_stimulating_hormone']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
+      //             `)
+      //             )
+      //           }
           
 
-              }
+      //         }
 
-            }
-          }
-      const gridCBC=[];
-      const gridRBC=[];
-      const gridHemoglobin=[];
-      const gridThyroid=[];
-      while(recordCBC.length) gridCBC.push(recordCBC.splice(0,17))
-      while(recordRBC.length) gridRBC.push(recordRBC.splice(0,10))
-      while(recordHemoglobin.length) gridHemoglobin.push(recordHemoglobin.splice(0,10))
-      while(recordThyroid.length) gridThyroid.push(recordThyroid.splice(0,13))
-      setDataCBC(gridCBC)
-      setDataRBC(gridRBC)
-      setDataHemoglobin(gridHemoglobin)
-      setDataThyroid(gridThyroid)
+      //       }
+      //     }
+      // const gridCBC=[];
+      // const gridRBC=[];
+      // const gridHemoglobin=[];
+      // const gridThyroid=[];
+      // while(recordCBC.length) gridCBC.push(recordCBC.splice(0,17))
+      // while(recordRBC.length) gridRBC.push(recordRBC.splice(0,10))
+      // while(recordHemoglobin.length) gridHemoglobin.push(recordHemoglobin.splice(0,10))
+      // while(recordThyroid.length) gridThyroid.push(recordThyroid.splice(0,13))
+      // setDataCBC(gridCBC)
+      // setDataRBC(gridRBC)
+      // setDataHemoglobin(gridHemoglobin)
+      // setDataThyroid(gridThyroid)
       }
 
       if(selectedValue==='Patient Id')
@@ -144,89 +151,89 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
                 org_name:user.name
             })
             setData(fetchdata.data)
-            console.log(fetchdata.data)
-            let accounts = await window.ethereum.request({
-              method: "eth_accounts",
-          });
-            let patients =  await orgContract.contract.methods
-            .getPatients()
-            .call({ form: accounts[0] });
-            let recordCBC=[];
-            let recordRBC=[];
-            let recordHemoglobin=[];
-            let recordThyroid=[];
+          //   console.log(fetchdata.data)
+          //   let accounts = await window.ethereum.request({
+          //     method: "eth_accounts",
+          // });
+          //   let patients =  await orgContract.contract.methods
+          //   .getPatients()
+          //   .call({ form: accounts[0] });
+          //   let recordCBC=[];
+          //   let recordRBC=[];
+          //   let recordHemoglobin=[];
+          //   let recordThyroid=[];
             
             
-            for(let i=0;i<patients.length;i++)
-          {
-            for(let j=0;j<data.length;j++)
-            {
-              if(patients[i]['pid']===data[j]['patient_id'])
-              {
-                if(data[j]['test_name']==='CBC')
-                {
-                recordCBC.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                patients[i]['email'],
-                data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['rbc'],data[j]['hct'],
-                data[j]['mcv'],data[j]['mch'],data[j]['mchc'],data[j]['rdw_cv'],
-                data[j]['tlc'],data[j]['des'],
-                html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=CBC&name=${patients[i]["patient_name"]}&Hemoglobin=${data[j]['hemoglobin']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}&rbc=${data[j]['rbc']}&hct=${data[j]['hct']}&mcv=${data[j]['mcv']}&mch=${data[j]['mch']}&mchc=${data[j]['mchc']}&rdw_cv=${data[j]['rdw_cv']}&tlc=${data[j]['tlc']}'>View</a>
-                  `)
-                )
-                }
+          //   for(let i=0;i<patients.length;i++)
+          // {
+          //   for(let j=0;j<data.length;j++)
+          //   {
+          //     if(patients[i]['pid']===data[j]['patient_id'])
+          //     {
+          //       if(data[j]['test_name']==='CBC')
+          //       {
+          //       recordCBC.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+          //       patients[i]['email'],
+          //       data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['rbc'],data[j]['hct'],
+          //       data[j]['mcv'],data[j]['mch'],data[j]['mchc'],data[j]['rdw_cv'],
+          //       data[j]['tlc'],data[j]['des'],
+          //       html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=CBC&name=${patients[i]["patient_name"]}&Hemoglobin=${data[j]['hemoglobin']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}&rbc=${data[j]['rbc']}&hct=${data[j]['hct']}&mcv=${data[j]['mcv']}&mch=${data[j]['mch']}&mchc=${data[j]['mchc']}&rdw_cv=${data[j]['rdw_cv']}&tlc=${data[j]['tlc']}'>View</a>
+          //         `)
+          //       )
+          //       }
           
-                if(data[j]['test_name']==='RBC')
-                {
+          //       if(data[j]['test_name']==='RBC')
+          //       {
 
-                  recordRBC.push( patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                patients[i]['email'],
-                data[j]["test_name"],data[j]['report_date'],data[j]['rbc'],data[j]['des'],
-                html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=RBC&name=${patients[i]["patient_name"]}&rbc=${data[j]['rbc']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
-                  `)
-                  )
+          //         recordRBC.push( patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+          //       patients[i]['email'],
+          //       data[j]["test_name"],data[j]['report_date'],data[j]['rbc'],data[j]['des'],
+          //       html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=RBC&name=${patients[i]["patient_name"]}&rbc=${data[j]['rbc']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
+          //         `)
+          //         )
                  
-                }
+          //       }
                 
-                // edit
-                if(data[j]['test_name']==='Hemoglobin')
-                {
+          //       // edit
+          //       if(data[j]['test_name']==='Hemoglobin')
+          //       {
                   
-                  recordHemoglobin.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                  patients[i]['email'],
-                  data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['des'], 
-                  html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Hemoglobin&name=${patients[i]["patient_name"]}&Hemoglobin=${data[j]['hemoglobin']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
-                  `)
-                  )
+          //         recordHemoglobin.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+          //         patients[i]['email'],
+          //         data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['des'], 
+          //         html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Hemoglobin&name=${patients[i]["patient_name"]}&Hemoglobin=${data[j]['hemoglobin']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
+          //         `)
+          //         )
                  
-                }
-                if(data[j]['test_name']==='Thyroid')
-                {
+          //       }
+          //       if(data[j]['test_name']==='Thyroid')
+          //       {
                   
-                  recordThyroid.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                  patients[i]['email'],
-                  data[j]["test_name"],data[j]['report_date'],data[j]['T3'],data[j]['T4'],data[j]['thyroid_stimulating_hormone'],data[j]['des'],
-                  html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Thyroid&name=${patients[i]["patient_name"]}&T3=${data[j]['T3']}&T4=${data[j]['T4']}&tsh=${data[j]['thyroid_stimulating_hormone']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
-                  `)
-                  )
-                }
+          //         recordThyroid.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+          //         patients[i]['email'],
+          //         data[j]["test_name"],data[j]['report_date'],data[j]['T3'],data[j]['T4'],data[j]['thyroid_stimulating_hormone'],data[j]['des'],
+          //         html(`<a href='http://localhost:3000/view?hospital=${user.name}&testName=Thyroid&name=${patients[i]["patient_name"]}&T3=${data[j]['T3']}&T4=${data[j]['T4']}&tsh=${data[j]['thyroid_stimulating_hormone']}&description=${data[j]['des']}&date=${data[j]['report_date']},pid=${patients[i]['pid']}'>View</a>
+          //         `)
+          //         )
+          //       }
           
 
-              }
+          //     }
 
-            }
-          }
-          const gridCBC=[];
-          const gridRBC=[];
-          const gridHemoglobin=[];
-          const gridThyroid=[];
-          while(recordCBC.length) gridCBC.push(recordCBC.splice(0,18))
-          while(recordRBC.length) gridRBC.push(recordRBC.splice(0,11))
-          while(recordHemoglobin.length) gridHemoglobin.push(recordHemoglobin.splice(0,11))
-          while(recordThyroid.length) gridThyroid.push(recordThyroid.splice(0,14))
-          setDataCBC(gridCBC)
-          setDataRBC(gridRBC)
-          setDataHemoglobin(gridHemoglobin)
-          setDataThyroid(gridThyroid)
+          //   }
+          // }
+          // const gridCBC=[];
+          // const gridRBC=[];
+          // const gridHemoglobin=[];
+          // const gridThyroid=[];
+          // while(recordCBC.length) gridCBC.push(recordCBC.splice(0,18))
+          // while(recordRBC.length) gridRBC.push(recordRBC.splice(0,11))
+          // while(recordHemoglobin.length) gridHemoglobin.push(recordHemoglobin.splice(0,11))
+          // while(recordThyroid.length) gridThyroid.push(recordThyroid.splice(0,14))
+          // setDataCBC(gridCBC)
+          // setDataRBC(gridRBC)
+          // setDataHemoglobin(gridHemoglobin)
+          // setDataThyroid(gridThyroid)
       
       }
 
@@ -240,166 +247,166 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
         setData(fetchdata.data)
         
         
-        let accounts = await window.ethereum.request({
-            method: "eth_accounts",
-        });
-          let patients =  await orgContract.contract.methods
-          .getPatients()
-          .call({ form: accounts[0] });
-          console.log(patients);
-          const gcbc=[];
-          const grbc=[];
-          const ghmg=[];
-          const recordThyroid=[];
-          for(let i=0;i<patients.length;i++)
-          {
-            for(let j=0;j<data.length;j++)
-            {
-              if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==="CBC")
-              {
-                  gcbc.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                  patients[i]['email'],
-                  data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['rbc'],data[j]['hct'],
-                  data[j]['mcv'],data[j]['mch'],data[j]['mchc'],data[j]['rdw_cv'],
-                  data[j]['tlc'],data[j]['des']
-                  )
+        // let accounts = await window.ethereum.request({
+        //     method: "eth_accounts",
+        // });
+        //   let patients =  await orgContract.contract.methods
+        //   .getPatients()
+        //   .call({ form: accounts[0] });
+        //   console.log(patients);
+        //   const gcbc=[];
+        //   const grbc=[];
+        //   const ghmg=[];
+        //   const recordThyroid=[];
+        //   for(let i=0;i<patients.length;i++)
+        //   {
+        //     for(let j=0;j<data.length;j++)
+        //     {
+        //       if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==="CBC")
+        //       {
+        //           gcbc.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+        //           patients[i]['email'],
+        //           data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['rbc'],data[j]['hct'],
+        //           data[j]['mcv'],data[j]['mch'],data[j]['mchc'],data[j]['rdw_cv'],
+        //           data[j]['tlc'],data[j]['des']
+        //           )
                   
-              }
-              if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==="RBC")
-              {
-                grbc.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                patients[i]['email'],
-                data[j]["test_name"],data[j]['report_date'],data[j]['rbc'],data[j]['des']
-                )
-              }
-              if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==="Hemoglobin")
-              {
-                ghmg.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                patients[i]['email'],
-                data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['des']
-                )
-              }
-              if(data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==='Thyroid')
-                {
+        //       }
+        //       if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==="RBC")
+        //       {
+        //         grbc.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+        //         patients[i]['email'],
+        //         data[j]["test_name"],data[j]['report_date'],data[j]['rbc'],data[j]['des']
+        //         )
+        //       }
+        //       if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==="Hemoglobin")
+        //       {
+        //         ghmg.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+        //         patients[i]['email'],
+        //         data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['des']
+        //         )
+        //       }
+        //       if(data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==='Thyroid')
+        //         {
                   
-                  recordThyroid.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                  patients[i]['email'],
-                  data[j]["test_name"],data[j]['report_date'],data[j]['T3'],data[j]['T4'],data[j]['thyroid_stimulating_hormone'],data[j]['des'])
+        //           recordThyroid.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+        //           patients[i]['email'],
+        //           data[j]["test_name"],data[j]['report_date'],data[j]['T3'],data[j]['T4'],data[j]['thyroid_stimulating_hormone'],data[j]['des'])
                  
-                }
-            }
-          }
-          const gridCBC=[];
-          const gridRBC=[];
-          const gridHemoglobin=[];
-          const gridThyroid=[];
-          while(recordThyroid.length) gridThyroid.push(recordThyroid.splice(0,13))
-          while(gcbc.length) gridCBC.push(gcbc.splice(0,17))
-          while(grbc.length) gridRBC.push(grbc.splice(0,10))
-          while(ghmg.length) gridHemoglobin.push(ghmg.splice(0,10))
+        //         }
+        //     }
+        //   }
+        //   const gridCBC=[];
+        //   const gridRBC=[];
+        //   const gridHemoglobin=[];
+        //   const gridThyroid=[];
+        //   while(recordThyroid.length) gridThyroid.push(recordThyroid.splice(0,13))
+        //   while(gcbc.length) gridCBC.push(gcbc.splice(0,17))
+        //   while(grbc.length) gridRBC.push(grbc.splice(0,10))
+        //   while(ghmg.length) gridHemoglobin.push(ghmg.splice(0,10))
       
-          setDataCBC(gridCBC)
-          setDataRBC(gridRBC)
-          setDataHemoglobin(gridHemoglobin)
-          setDataThyroid(gridThyroid)
+        //   setDataCBC(gridCBC)
+        //   setDataRBC(gridRBC)
+        //   setDataHemoglobin(gridHemoglobin)
+        //   setDataThyroid(gridThyroid)
       
         
         }//end of report date
         if(selectedValue==='Test Name')
         {
           let fetchdata= await axios.post('http://localhost:4000/inserttestname',{
-                tname:test_name.toUpperCase(),
+                tname:test_name.toLowerCase(),
                 org_name:user.name
             })
             
-        console.log(fetchdata.data)
+        // console.log(fetchdata.data)
         setData(fetchdata.data)
-        let accounts = await window.ethereum.request({
-            method: "eth_accounts",
-        });
-          let patients =  await orgContract.contract.methods
-          .getPatients()
-          .call({ form: accounts[0] });
-          console.log(patients)
-          const gcbc=[];
-          const grbc=[];
-          const ghmg=[];
-          const recordThyroid=[]
-          for(let i=0;i<patients.length;i++)
-          {
-            for(let j=0;j<data.length;j++)
-            {
-                if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==="CBC")
-              {
-                  gcbc.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],
-                  patients[i]['mobno'],patients[i]['email'],
-                  data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['rbc'],data[j]['hct'],
-                  data[j]['mcv'],data[j]['mch'],data[j]['mchc'],data[j]['rdw_cv'],
-                  data[j]['tlc'],data[j]['des']
-                  )
+        // let accounts = await window.ethereum.request({
+        //     method: "eth_accounts",
+        // });
+        //   let patients =  await orgContract.contract.methods
+        //   .getPatients()
+        //   .call({ form: accounts[0] });
+        //   console.log(patients)
+        //   const gcbc=[];
+        //   const grbc=[];
+        //   const ghmg=[];
+        //   const recordThyroid=[]
+        //   for(let i=0;i<patients.length;i++)
+        //   {
+        //     for(let j=0;j<data.length;j++)
+        //     {
+        //         if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==="CBC")
+        //       {
+        //           gcbc.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],
+        //           patients[i]['mobno'],patients[i]['email'],
+        //           data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['rbc'],data[j]['hct'],
+        //           data[j]['mcv'],data[j]['mch'],data[j]['mchc'],data[j]['rdw_cv'],
+        //           data[j]['tlc'],data[j]['des']
+        //           )
                   
-              }
-              if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"])
-              {
-                if(data[j]['test_name']==="RBC" || data[j]['test_name']==="CBC")
-                {
-                grbc.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],
-                patients[i]['mobno'],patients[i]['email'],data[j]["test_name"],data[j]['report_date'],
-                data[j]['rbc'],data[j]['des']
-                )
-                }
-              }
-              if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"])
-              {
-                if(data[j]['test_name']==="Hemoglobin" || data[j]['test_name']==="CBC")
-                {
-                ghmg.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],
-                patients[i]['mobno'],patients[i]['email'],
-                data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['des']
-                )
-                }
-              }
-              if(data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==='Thyroid')
-                {
+        //       }
+        //       if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"])
+        //       {
+        //         if(data[j]['test_name']==="RBC" || data[j]['test_name']==="CBC")
+        //         {
+        //         grbc.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],
+        //         patients[i]['mobno'],patients[i]['email'],data[j]["test_name"],data[j]['report_date'],
+        //         data[j]['rbc'],data[j]['des']
+        //         )
+        //         }
+        //       }
+        //       if(data[j]["organization_name"]===patients[i]["orgname"] && data[j]["patient_id"]===patients[i]["pid"])
+        //       {
+        //         if(data[j]['test_name']==="Hemoglobin" || data[j]['test_name']==="CBC")
+        //         {
+        //         ghmg.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],
+        //         patients[i]['mobno'],patients[i]['email'],
+        //         data[j]["test_name"],data[j]['report_date'],data[j]['hemoglobin'],data[j]['des']
+        //         )
+        //         }
+        //       }
+        //       if(data[j]["patient_id"]===patients[i]["pid"] && data[j]['test_name']==='Thyroid')
+        //         {
                   
-                  recordThyroid.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
-                  patients[i]['email'],
-                  data[j]["test_name"],data[j]['report_date'],data[j]['T3'],data[j]['T4'],data[j]['thyroid_stimulating_hormone'],data[j]['des'])
+        //           recordThyroid.push(patients[i]['pid'],patients[i]["patient_name"],patients[i]["age"],patients[i]["addr"],patients[i]['mobno'],
+        //           patients[i]['email'],
+        //           data[j]["test_name"],data[j]['report_date'],data[j]['T3'],data[j]['T4'],data[j]['thyroid_stimulating_hormone'],data[j]['des'])
                  
-                }
+        //         }
               
 
-            }
+        //     }
 
-          }
-          console.log(recordThyroid)
-          const gridCBC=[];
-          const gridRBC=[];
-          const gridHemoglobin=[];
-          const gridThyroid=[];
-          while(gcbc.length) gridCBC.push(gcbc.splice(0,17))
-          while(grbc.length) gridRBC.push(grbc.splice(0,10))
-          while(ghmg.length) gridHemoglobin.push(ghmg.splice(0,10))
-          while(recordThyroid.length) gridThyroid.push(recordThyroid.splice(0,13))
-          console.log(gridHemoglobin)
+        //   }
+        //   console.log(recordThyroid)
+        //   const gridCBC=[];
+        //   const gridRBC=[];
+        //   const gridHemoglobin=[];
+        //   const gridThyroid=[];
+        //   while(gcbc.length) gridCBC.push(gcbc.splice(0,17))
+        //   while(grbc.length) gridRBC.push(grbc.splice(0,10))
+        //   while(ghmg.length) gridHemoglobin.push(ghmg.splice(0,10))
+        //   while(recordThyroid.length) gridThyroid.push(recordThyroid.splice(0,13))
+        //   console.log(gridHemoglobin)
       
-          if(test_name==='cbc')
-          {
-          setDataCBC(gridCBC)
+        //   if(test_name==='cbc')
+        //   {
+        //   setDataCBC(gridCBC)
 
-          }
-          else if(test_name==='rbc')
-          {
-          setDataRBC(gridRBC)
-          }
-          else if(test_name.toUpperCase()==='HEMOGLOBIN')
-          {
-            setDataHemoglobin(gridHemoglobin)
-          }
-          else if(test_name.toUpperCase()==='THYROID')
-          {
-            setDataThyroid(gridThyroid)
-          }
+        //   }
+        //   else if(test_name==='rbc')
+        //   {
+        //   setDataRBC(gridRBC)
+        //   }
+        //   else if(test_name.toUpperCase()==='HEMOGLOBIN')
+        //   {
+        //     setDataHemoglobin(gridHemoglobin)
+        //   }
+        //   else if(test_name.toUpperCase()==='THYROID')
+        //   {
+        //     setDataThyroid(gridThyroid)
+        //   }
 
         }//end of test name
 
@@ -408,8 +415,8 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
     
     return (
         <>
-        <form >
             <Navbar />
+        <form >
             <div className="container my-4">
                 <div className="card">
                     <div className="card-body">
@@ -533,15 +540,21 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
           
             {/* (click two times to see result) */}
           
-            {data && data.length===0 && (
+            {data && data.length===0 ?
               <>
-              <center>
-              <p className="m-10">No Records Found</p>
-              </center>
+                <center>
+                  <p className="m-10">No Records Found</p>
+                </center>
+              </>:
+              <>
+                <Hemoglobin data={data.filter(d=>d.test_name==='Hemoglobin')} />
+                <CBC data={data.filter(d=>d.test_name==='CBC')}  />
+                <Thyroid data={data.filter(d=>d.test_name==='Thyroid')}  />
+                <RBC data={data.filter(d=>d.test_name==='RBC')}  />
               </>
-            )
             }
-            <div className="container my-4">
+
+            {/* <div className="container my-4">
             
                   
                 {dataCBC && dataCBC.length!==0 && (
@@ -678,9 +691,9 @@ const PatientRecord = ({ orgContract, web3, onSuccess = null ,user}) => {
                                             </>
                                           )}
                          
-                        </div>
+                        </div>*/}
 
-            </div>
+            </div> 
             
             </form>
             

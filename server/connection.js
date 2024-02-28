@@ -9,57 +9,69 @@ const kidney=require('./models/kidneyTestSchema')
 const thy=require('./models/thyroidSchema')
 const search=require('./models/reportDateSearchSchema')
 const app = express();
-
-console.log(process.env.MONGO_DB_URL)
 app.use(express.json());
 app.use(cors());
-const {
-  GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
-} = require("@google/generative-ai");
+const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
+const { PromptTemplate } = require('@langchain/core/prompts');
+const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
 
 mongoose.connect(process.env.MONGO_DB_URL,{useNewurlParser:true});
 const MODEL_NAME = "gemini-1.0-pro";
 const API_KEY = process.env.GEMINI_API_KEY;
 
+const genAI = new GoogleGenerativeAI(API_KEY);
+const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+
+const generationConfig = {
+  temperature: 0.9,
+  topK: 1,
+  topP: 1,
+  maxOutputTokens: 2048,
+};
+const safetySettings = [
+  {
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+];
+
+const chatModel = new ChatGoogleGenerativeAI({
+  apiKey:API_KEY,
+  modelName: "gemini-1.0-pro",
+  maxOutputTokens: 5,
+  safetySettings
+});
+const chat = model.startChat({
+  generationConfig,
+  safetySettings,
+  history: [
+  ],
+});
+const contextDetectionPrompt = PromptTemplate.fromTemplate(
+  `You are a assistant with predictive sense like an intelligent human and has a deep knowledge in the medical field and in normal conversation. You can jugde if a sentence is from medical field or a greeting or any other context. If you find a sentence is from medical domain or a greeting message just simply answer true otherwise reply with a false. Don't return more than one word. Answer with "true" or "false".
+  question: {question}?
+  answer:`
+);
+// const greetingDetectionPrompt = PromptTemplate.fromTemplate(
+//   `You are a assistant with expert communication styles like an intelligent human. You can find a question is any type of greeting or not. If {sentence} is a greeting message then reply it. if it is not a greeting message then reurn 'false'. Don't return more than one word if it is not a greeting msg.
+//   answer:`
+// );
+const contextDetectionChain = contextDetectionPrompt.pipe(chatModel)
+// const greetingDetectionChain = greetingDetectionPrompt.pipe(chatModel)
+
 async function runChat(input) {
-  const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({ model: MODEL_NAME });
-
-  const generationConfig = {
-    temperature: 0.9,
-    topK: 1,
-    topP: 1,
-    maxOutputTokens: 2048,
-  };
-
-  const safetySettings = [
-    {
-      category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-      threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    },
-    {
-      category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-      threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    },
-    {
-      category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-      threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    },
-    {
-      category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-      threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    },
-  ];
-
-  const chat = model.startChat({
-    generationConfig,
-    safetySettings,
-    history: [
-    ],
-  });
-
   const result = await chat.sendMessage(input);
   const response = result.response;
   const data = !response.promptFeedback.blockReason ? response.text() : "INVALID QUERY"
@@ -398,6 +410,9 @@ app.post('/getPatientData',async(req,res)=>{
 // Chat section
 app.post('/getChatResponse', async(req,res)=>{
   const input = req.body.input
-  const answer = await runChat(input)
-  res.send({answer})
+    let {content} = await contextDetectionChain.invoke({question:"input"})
+    console.log({content})
+    const answer = content !== 'false' ? await runChat(input) : 'OUT of Context'
+    console.log({answer})
+    res.send({answer})
 })

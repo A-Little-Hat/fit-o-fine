@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@google/generative-ai": "^0.2.1",
+    "@langchain/core": "^0.1.39",
+    "@langchain/google-genai": "^0.0.10",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

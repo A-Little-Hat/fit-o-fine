@@ -1,8 +1,7 @@
 const express = require('express');
 const mongoose=require('mongoose')
 const cors=require('cors');
-const axios=require('axios');
-
+require('dotenv').config()
 const cbc=require('./models/cbcSchema')
 const rbcs=require('./models/rbcSchema')
 const hmgg=require('./models/hemoglobinSchema')
@@ -11,10 +10,10 @@ const thy=require('./models/thyroidSchema')
 const search=require('./models/reportDateSearchSchema')
 const app = express();
 
+console.log(process.env.MONGO_DB_URL)
 app.use(express.json());
 app.use(cors());
-// mongoose.connect('mongodb+srv://root:root@cluster0.7yhmbar.mongodb.net/?retryWrites=true&w=majority',{useNewurlParser:true});
-mongoose.connect('mongodb://127.0.0.1:27017/healthlab',{useNewurlParser:true});
+mongoose.connect(process.env.MONGO_DB_URL,{useNewurlParser:true});
 
 const userSchema=new mongoose.Schema({
   userid:{
@@ -336,7 +335,6 @@ app.post('/insertrbc', async(req, res) => {
   });
   app.post('/getallorg',async(req,res)=>{
 
-    const patid=req.body.pid;
     
     const org=req.body.org_name;
     const data=await search.find({organization_name:org})

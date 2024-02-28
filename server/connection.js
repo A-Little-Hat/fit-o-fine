@@ -384,6 +384,7 @@ app.post('/getPatientData',async(req,res)=>{
   const pid = req.body.pid
   console.log(pid)
   // res.send(pid)
+  // cbc.find
   const data = await Patient.find({
     patient_id:pid
   })

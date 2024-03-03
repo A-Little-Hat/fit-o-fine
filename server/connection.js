@@ -64,6 +64,11 @@ const contextDetectionPrompt = PromptTemplate.fromTemplate(
   question: {question}?
   answer:`
 );
+// const contextDetectionPrompt = PromptTemplate.fromTemplate(
+//   `You have the capability of discerning whether a given sentence belongs to the medical domain, a greeting, or any other context. If the sentence is from the medical field or a greeting, respond with "true"; otherwise, reply with "false". Provide your response in just one word.
+//   question: {question}?
+//   answer:`
+// );
 // const greetingDetectionPrompt = PromptTemplate.fromTemplate(
 //   `You are a assistant with expert communication styles like an intelligent human. You can find a question is any type of greeting or not. If {sentence} is a greeting message then reply it. if it is not a greeting message then reurn 'false'. Don't return more than one word if it is not a greeting msg.
 //   answer:`
@@ -412,7 +417,8 @@ app.post('/getChatResponse', async(req,res)=>{
   const input = req.body.input
     let {content} = await contextDetectionChain.invoke({question:"input"})
     console.log({content})
-    const answer = content !== 'false' ? await runChat(input) : 'OUT of Context'
+    const answer = content !== 'false' ? await runChat(input) : 'Out of context'
     console.log({answer})
+    // res.send({answer:content})
     res.send({answer})
 })

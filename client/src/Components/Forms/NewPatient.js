@@ -119,22 +119,23 @@ export const PatientForm = ({ orgContract, web3, onSuccess = null, user }) => {
         };
         e.preventDefault();
         let date = new Date(formData.report_date.value);
-        function generatePatientId() {
-            let id = formData.email.value + "#" + user.name;
-            id=id.replaceAll(/\s/g,'')
-            return id;
-        }
-        const pid = generatePatientId();
-        function generatePassword() {
-            let psd = formData.email.value
-            psd=psd.replaceAll(/\s/g,'')
-            return psd
-        }
-        const psd = generatePassword()
+        // function generatePatientId() {
+        //     let id = formData.email.value + "#" + user.name;
+        //     id=id.replaceAll(/\s/g,'')
+        //     return id;
+        // }
+        // const pid = generatePatientId();
+        // function generatePassword() {
+        //     let psd = formData.email.value
+        //     psd=psd.replaceAll(/\s/g,'')
+        //     return psd
+        // }
+        // const psd = generatePassword()
+        const pid = formData.email.value
 
         axios.post('http://localhost:4000/addNewPatient', {
             ID: pid,
-            pass: psd
+            pass: "password"
         }).then((Response) => {
             // sweet alert
             Response&&Response.data?console.log("added"):console.log("error")

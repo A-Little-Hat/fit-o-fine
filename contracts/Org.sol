@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
 
-contract Org{
-    struct Organization{
+contract Org {
+    struct Organization {
         address id;
         string name;
         string addr;
@@ -31,11 +31,10 @@ contract Org{
     }
     address admin;
     struct Patient {
-    
         string orgname;
         string pid;
         string patient_name;
-        string addr; 
+        string addr;
         uint256 age;
         uint256 mobno;
         string email;
@@ -48,7 +47,6 @@ contract Org{
     event AddPatient(Patient _patient);
 
     function addPatient(
-
         string memory orgname,
         string memory pid,
         string memory patient_name,
@@ -63,16 +61,15 @@ contract Org{
         require(msg.sender != admin, "Only Organizations can add new patients");
         patients.push(
             Patient({
-                
-                orgname:orgname,
-                pid:pid,
+                orgname: orgname,
+                pid: pid,
                 patient_name: patient_name,
-                addr:addr,
-                age:age,
-                mobno:mobno,
-                email:email,
-                report_date:report_date,
-                test_name:test_name,
+                addr: addr,
+                age: age,
+                mobno: mobno,
+                email: email,
+                report_date: report_date,
+                test_name: test_name,
                 description: description
             })
         );
@@ -122,11 +119,14 @@ contract Org{
         OrgMapSet(sender, org);
         emit Register(org);
     }
-     function getOrg() public view returns (Organization memory) {
+    function getOrg() public view returns (Organization memory) {
         return orgmap.values[msg.sender];
     }
-    function getUnverifiedOrganization() public view returns (Organization[] memory) {
-       
+    function getUnverifiedOrganization()
+        public
+        view
+        returns (Organization[] memory)
+    {
         uint256 counter = 0;
 
         for (uint256 i = 0; i < orgmap.keys.length; i++) {
@@ -154,7 +154,18 @@ contract Org{
         org.verified = true;
         emit VerifyOrganization("Organization update success");
     }
-    function getVerifiedOrganization() public view returns (Organization[] memory) {
+    function rejectOrganization(address _address) public {
+        require(msg.sender == admin, "Only admin can reject Organization");
+        // You can add any additional logic here before rejecting the organization
+        delete orgmap.values[_address]; // Delete the organization from the mapping
+        emit VerifyOrganization("Organization rejected");
+    }
+
+    function getVerifiedOrganization()
+        public
+        view
+        returns (Organization[] memory)
+    {
         // TODO: Create a pagination type data return
         // INFO: Resolve null value from the voters
         uint256 counter = 0;

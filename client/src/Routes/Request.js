@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Navbar from "../Components/Navbar";
-import { Grid} from "gridjs-react";
-import "gridjs/dist/theme/mermaid.css";
-import { h } from "gridjs";
 import { ToastContainer, toast } from "react-toastify";
 const Request = ({ contract, web3 }) => {
     const [data, setData] = useState(null);
@@ -21,7 +18,6 @@ const Request = ({ contract, web3 }) => {
                     setError(err);
                 });
             setData(orgs);
-            //<connection/>
             setLoading(false);
         })();
     }, [contract]);
@@ -52,8 +48,7 @@ const Request = ({ contract, web3 }) => {
                 pending: "Waiting...",
                 success: {
                     render({ data }) {
-                        let message =
-                            data.events.VerifyOrganization.returnValues._message;
+                        let message = data.events.VerifyOrganization.returnValues._message;
                         setData((state) =>
                             state.filter((item) => item.id !== address)
                         );
@@ -67,77 +62,129 @@ const Request = ({ contract, web3 }) => {
                 },
             }
         );
-    
+
+    };
+    const rejectOrg = async (address) => {
+        let toastOption = {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        };
+        if (!web3.web3.utils.isAddress(address)) {
+            toast.error("Invalid address error", toastOption);
+            return;
+        }
+        let accounts = await window.ethereum.request({
+            method: "eth_accounts",
+        });
+        await toast.promise(
+            contract.contract.methods
+                .rejectOrganization(address)
+                .send({ from: accounts[0] }),
+            {
+                pending: "Waiting...",
+                success: {
+                    render({ data }) {
+                        let message = data.events.VerifyOrganization.returnValues._message;
+                        setData((state) =>
+                            state.filter((item) => item.id !== address)
+                        );
+                        return message;
+                    },
+                },
+                error: {
+                    render({ err }) {
+                        return "Error : " + err.message;
+                    },
+                },
+            }
+        );
+
     };
     return (
         <>
             <Navbar />
-            
-            <div className="container my-5"  >
-                <div className="card" >
-                    <div className="card-body" style={{backgroundColor:'#E5E3E3'}}>
-                        <h5 className="card-title">New Organization Request</h5>
-                        <hr />
-                        {loading && <p>Loading...</p>}
-                        {error && <p>{error}</p>}
-                        {data && data.length !== 0 ? (
-                            <Grid
-                                data={data}
-                                columns={[
-                                    {
-                                        data: (row) => row.name,
-                                        name: "Name",
-                                    },
-                                    {
-                                        data: (row) => row.addr,
-                                        name: "Address",
-                                    },
-                                    {
-                                        data: (row) => row.email,
-                                        name: "Email Address",
-                                    },
-                                    {
-                                        data: (row) => row.con,
-                                        name: "Contact Number",
-                                    },
-                                    {
-                                        data:(row)=>row.typ,
-                                        name:"Type",
-                                    },
-                                    {
-                                        data: (row) => row.id,
-                                        name: "Actions",
-                                        formatter: (data) => {
-                                            return h(
-                                                "button",
-                                                {
-                                                    className:
-                                                        "border rounded-md text-white btn btn-primary",
-                                                    onClick: () =>
-                                                        approvedOrg(data),
-                                            
 
-                                                },
-                                                "Approve"
-                                            );
-                                        },
-                                    },
-                                ]}
-                                search={false}
-                                pagination={{
-                                    enabled: true,
-                                    limit: 5,
-                                }}
-                            />
-                        ) : (
-                            <p className="text-center">
-                                There is no unverified organization
-                            </p>
-                        )}
-                    </div>
-                </div>
+            <div className="container my-5"  >
+                <h5 className="card-title">New Organization Request</h5>
+                <hr />
+                {loading && <p>Loading...</p>}
+                {error && <p>{error}</p>}
+
+                {data && data.length !== 0 ? (
+                    <table>
+                        <thead>
+                            <tr>
+                                <td
+                                    style={{"paddingTop":"20px", "paddingBottom":"20px", "paddingLeft":"20px"}}
+                                >Name</td>
+                                <td
+                                    style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                >Address</td>
+                                <td
+                                    style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                >Email Address</td>
+                                <td
+                                    style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                >Contact Number</td>
+                                <td
+                                    style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                >Type</td>
+                                <td
+                                    style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                >Actions</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map((item, index) =>
+                            (
+                                <tr key={index} >
+                                    <td
+                                        style={{"paddingTop":"20px", "paddingBottom":"20px", "paddingLeft":"20px"}}
+                                    >{item['name']}</td>
+                                    <td
+                                        style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                    >{item['addr']}</td>
+                                    <td
+                                        style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                    >{item['email']}</td>
+                                    <td
+                                        style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                    >{item['con']}</td>
+                                    <td
+                                        style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                    >{item['typ']}</td>
+                                    <td
+                                        style={{"paddingTop":"20px", "paddingBottom":"20px"}}
+                                    >
+                                        <button onClick={() =>
+                                            approvedOrg(item['id'])}
+                                            style={{"marginRight":"20px"}}
+                                            >
+                                            Approve
+                                        </button>
+                                        <button onClick={() =>
+                                            rejectOrg(item['id'])}>
+                                            Reject
+                                        </button>
+                                    </td>
+                                </tr>
+                            )
+                            )
+                            }
+                        </tbody>
+                    </table>
+                ) : (
+                    <p className="text-center">
+                        There is no unverified organization
+                    </p>
+                )}
             </div>
-            
+
             <ToastContainer />
         </>
     );

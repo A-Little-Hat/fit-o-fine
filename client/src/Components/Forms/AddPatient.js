@@ -1,7 +1,5 @@
 import { connect } from "react-redux";
 import { Form,Dropdown, Alert } from "react-bootstrap";
-
-import useValidate from "../../Hooks/useValidate";
 import Navbar from "../Navbar";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -125,7 +123,7 @@ const AddPatient=({orgContract,user})=>{
                     TLC:tlc,
                     comment:comment
                 })
-                alert("added")
+                Alert("added")
             };
         
             if(selectedValue==='RBC'){
@@ -137,7 +135,7 @@ const AddPatient=({orgContract,user})=>{
                     value:rbc1,
                     comment:comment,
                 })
-                alert("added")
+                Alert("added")
             };
             if(selectedValue==='Hemoglobin'){
                 axios.post('http://localhost:4000/inserthmg',{
@@ -148,7 +146,7 @@ const AddPatient=({orgContract,user})=>{
                     value:hemoglobin1,
                     comment:comment
                 })
-                alert("added")
+                Alert("added")
             }
             if(selectedValue==='Thyroid'){
                 axios.post('http://localhost:4000/inserthyroid',{
@@ -161,7 +159,7 @@ const AddPatient=({orgContract,user})=>{
                     thsh:thysti,
                     comment:comment
                 })
-                alert("added")
+                Alert("added")
             }
             
         }
@@ -177,7 +175,7 @@ const AddPatient=({orgContract,user})=>{
           console.log(patients);
          
           const org=[];
-          for(var i=0;i<patients.length;i++)
+          for(let i=0;i<patients.length;i++)
           {
             if(patients[i]['orgname']===user.name)
             {
@@ -186,7 +184,7 @@ const AddPatient=({orgContract,user})=>{
             }
           }
           const thispatient=[];
-          for(var i=0;i<patients.length;i++)
+          for(let i=0;i<patients.length;i++)
           {
             if(patients[i]['orgname']===user.name)
             {

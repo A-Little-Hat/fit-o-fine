@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
 import Navbar from "../Components/Navbar";
-import { Grid } from "gridjs-react";
-import "gridjs/dist/theme/mermaid.css";
 import moment from "moment";
 import axios from "axios";
 const Patient = ({ orgContract, web3, user }) => {

@@ -1,9 +1,6 @@
 import {  useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Navbar from "../Components/Navbar";
-// import { Grid } from "gridjs-react";
-// import { html } from "gridjs";
-// import "gridjs/dist/theme/mermaid.css";
 import { Dropdown } from "react-bootstrap";
 
 import Hemoglobin from "../Components/Hemoglobin";

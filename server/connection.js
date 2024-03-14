@@ -1,13 +1,13 @@
 const express = require('express');
-const mongoose=require('mongoose')
-const cors=require('cors');
+const mongoose = require('mongoose')
+const cors = require('cors');
 require('dotenv').config()
-const cbc=require('./models/cbcSchema')
-const rbcs=require('./models/rbcSchema')
-const hmgg=require('./models/hemoglobinSchema')
-const kidney=require('./models/kidneyTestSchema')
-const thy=require('./models/thyroidSchema')
-const search=require('./models/reportDateSearchSchema')
+const cbc = require('./models/cbcSchema')
+const rbcs = require('./models/rbcSchema')
+const hmgg = require('./models/hemoglobinSchema')
+const kidney = require('./models/kidneyTestSchema')
+const thy = require('./models/thyroidSchema')
+const search = require('./models/reportDateSearchSchema')
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -15,7 +15,7 @@ const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require("@googl
 const { PromptTemplate } = require('@langchain/core/prompts');
 const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
 
-mongoose.connect(process.env.MONGO_DB_URL,{useNewurlParser:true});
+mongoose.connect(process.env.MONGO_DB_URL, { useNewurlParser: true });
 const MODEL_NAME = "gemini-1.0-pro";
 const API_KEY = process.env.GEMINI_API_KEY;
 
@@ -48,7 +48,7 @@ const safetySettings = [
 ];
 
 const chatModel = new ChatGoogleGenerativeAI({
-  apiKey:API_KEY,
+  apiKey: API_KEY,
   modelName: "gemini-1.0-pro",
   maxOutputTokens: 5,
   safetySettings
@@ -84,63 +84,70 @@ async function runChat(input) {
 }
 
 
-const userSchema=new mongoose.Schema({
-  userid:{
-      type:String
-      
+const userSchema = new mongoose.Schema({
+  userid: {
+    type: String, required: true, unique: true
   },
-  password:{
-      type:String
-      
+  password: {
+    type: String, required: true
   }
 
 })
-const user=mongoose.model('user',userSchema,'patientDB')
+const user = mongoose.model('user', userSchema, 'patientDB')
 // new user registration
-app.post('/addNewPatient',async(req,res)=>{
+app.post('/addNewPatient', async (req, res) => {
   // console.log("/login")
-  // await user.insertOne({userid:req.body.ID,password:req.body.pass })
-  let username = new user({userid:req.body.ID,password:req.body.pass })
-  username.save()
-  res.send(true)
-}) 
+  try {
+    user.findOne({ userid: req.body.ID }).then((founduser) => {
+      if (founduser) {
+        
+      }else {
+        // await user.insertOne({userid:req.body.ID,password:req.body.pass })
+        let username = new user({ userid: req.body.ID, password: req.body.pass })
+        username.save()
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+  res.status(200).send(true)
+})
 
 // user login credential check
-app.post('/login',async(req,res)=>{
+app.post('/login', async (req, res) => {
   // console.log("/login")
-  await user.findOne({userid:req.body.ID}).then((founduser)=>{
-      if(req.body.pass==founduser.password)
-      {
-          console.log('password matched')
-          res.status(200).send(true)
-      }
-      else{
-          res.status(400).send(false)
-      }
-  }).catch((error)=>{
-      res.status(400).send(error)
+  await user.findOne({ userid: req.body.ID }).then((founduser) => {
+    if (req.body.pass == founduser.password) {
+      console.log('password matched')
+      res.status(200).send(true)
+    }
+    else {
+      res.status(400).send(false)
+    }
+  }).catch((error) => {
+    res.status(400).send(error)
   })
   // res.json({userid:req.body.ID,pass:req.body.pas})
 })
 
 
-app.post('/insertcbc', async(req, res) => {
+app.post('/insertcbc', async (req, res) => {
 
-  const organization_name=req.body.org_name;
-  const patient_id=req.body.patient_id;
-  const report_date=req.body.report_date;
-  const test_name=req.body.tname;
-  const hemoglobin=req.body.HEMOGLOBIN;
-  const rbc=req.body.RBC;
-  const hct=req.body.HCT;
-  const mcv=req.body.MCV;
-  const mch=req.body.MCH;
-  const mchc=req.body.MCHC;
-  const rdw_cv=req.body.RDWCV;
-  const tlc=req.body.TLC;
-  const des=req.body.comment;
+  const organization_name = req.body.org_name;
+  const patient_id = req.body.patient_id;
+  const report_date = req.body.report_date;
+  const test_name = req.body.tname;
+  const hemoglobin = req.body.HEMOGLOBIN;
+  const rbc = req.body.RBC;
+  const hct = req.body.HCT;
+  const mcv = req.body.MCV;
+  const mch = req.body.MCH;
+  const mchc = req.body.MCHC;
+  const rdw_cv = req.body.RDWCV;
+  const tlc = req.body.TLC;
+  const des = req.body.comment;
 
-  const formData=new cbc({
+  const formData = new cbc({
     organization_name,
     patient_id,
     report_date,
@@ -155,240 +162,240 @@ app.post('/insertcbc', async(req, res) => {
     tlc,
     des
   })
-  console.log('Inserted data : ',formData)
-  try{
+  console.log('Inserted data : ', formData)
+  try {
     await formData.save();
     res.send("inserted data")
-  } catch(err){
+  } catch (err) {
     console.log(err);
 
   }
 });
 
-app.post('/insertrbc', async(req, res) => {
-  
-  const organization_name=req.body.org_name;
-  const patient_id=req.body.patient_id;
-  const report_date=req.body.report_date;
-  const test_name=req.body.tname;
-  const rbc=req.body.value;
-  const des=req.body.comment;
+app.post('/insertrbc', async (req, res) => {
 
-    const formData=new rbcs({
-      organization_name,
-      patient_id,
-      report_date,
-      test_name,
-      rbc,
-      des
-    })
-    console.log('Inserted data : ',formData)
-    try{
-      await formData.save();
-      res.send("inserted data")
-    } catch(err){
-      console.log(err);
-  
-    }
-  });
+  const organization_name = req.body.org_name;
+  const patient_id = req.body.patient_id;
+  const report_date = req.body.report_date;
+  const test_name = req.body.tname;
+  const rbc = req.body.value;
+  const des = req.body.comment;
 
-  app.post('/inserthmg', async(req, res) => {
-  
-    const organization_name=req.body.org_name;
-    const patient_id=req.body.patient_id;
-    const report_date=req.body.report_date;
-    const test_name=req.body.tname;
-    const hemoglobin=req.body.value;
-    const des=req.body.comment;
+  const formData = new rbcs({
+    organization_name,
+    patient_id,
+    report_date,
+    test_name,
+    rbc,
+    des
+  })
+  console.log('Inserted data : ', formData)
+  try {
+    await formData.save();
+    res.send("inserted data")
+  } catch (err) {
+    console.log(err);
 
-  
-      const formData=new hmgg({
-        organization_name,
-        patient_id,
-        report_date,
-        test_name,
-        hemoglobin,
-        des
-      })
-      console.log('Inserted data : ',formData)
-      try{
-        await formData.save();
-        res.send("inserted data")
-      } catch(err){
-        console.log(err);
-    
-      }
-    });
-    app.post('/inserthyroid', async(req, res) => {
-  
-      const organization_name=req.body.org_name;
-      const patient_id=req.body.patient_id;
-      const report_date=req.body.report_date;
-      const test_name=req.body.tname;
-      const T3=req.body.T3;
-      const T4=req.body.T4;
-      const thyroid_stimulating_hormone=req.body.thsh;
+  }
+});
 
-      const des=req.body.comment;
-  
-    
-        const formData=new thy({
-          organization_name,
-          patient_id,
-          report_date,
-          test_name,
-          T3,
-          T4,
-          thyroid_stimulating_hormone,
-          des
-        })
-        console.log('Inserted data : ',formData)
-        try{
-          await formData.save();
-          res.send("inserted data")
-        } catch(err){
-          console.log(err);
-      
-        }
-      });
-  
+app.post('/inserthmg', async (req, res) => {
 
-    app.post('/insertkidneytest', async(req, res) => {
-  
-      const organization_name=req.body.org_name;
-      const patient_id=req.body.patient_id;
-      const report_date=req.body.report_date;
-      const test_name=req.body.tname;
-      const colour=req.body.colour;
-      const appearance=req.body.appearance;
-      const specificgravity=req.body.specificgravity;
-      const pH=req.body.pH;
-      const glucose=req.body.glucose;
-      const protein=req.body.protein;
-      const ketones=req.body.ketones;
-      const blood=req.body.blood;
-      const bilirubin=req.body.bilirubin;
-      const urobilinogen=req.body.urobilinogen;
-      const leucocyte_esterase=req.body.leucocyte_esterase;
-      const nitrite=req.body.nitrite;
-      const pus_cells=req.body.pus_cells;
-      const redbloodcells=req.body.redbloodcells;
-      const epithelialcells=req.body.epithelialcells;
-      const casts=req.body.casts;
-      const crystals=req.body.crystals;
-      const yeast=req.body.yeast;
-      const bacteria=req.body.bacteria;
+  const organization_name = req.body.org_name;
+  const patient_id = req.body.patient_id;
+  const report_date = req.body.report_date;
+  const test_name = req.body.tname;
+  const hemoglobin = req.body.value;
+  const des = req.body.comment;
 
-      const des=req.body.comment;
-  
-    
-        const formData=new kidney({
-          organization_name,
-          patient_id,
-          report_date,
-          test_name,
-          colour,
-          appearance,
-          specificgravity,
-          pH,
-          glucose,
-          protein,
-          ketones,
-          blood,
-          bilirubin,
-          urobilinogen,
-          leucocyte_esterase,
-          nitrite,
-          pus_cells,
-          redbloodcells,
-          epithelialcells,
-          casts,
-          crystals,
-          yeast,
-          bacteria,
-          des
-        })
-        console.log('Inserted data : ',formData)
-        try{
-          await formData.save();
-          res.send("inserted data")
-        } catch(err){
-          console.log(err);
-      
-        }
-      });
 
-  app.post('/insertreportdate',async(req,res)=>{
+  const formData = new hmgg({
+    organization_name,
+    patient_id,
+    report_date,
+    test_name,
+    hemoglobin,
+    des
+  })
+  console.log('Inserted data : ', formData)
+  try {
+    await formData.save();
+    res.send("inserted data")
+  } catch (err) {
+    console.log(err);
 
-    const reportDate1=req.body.rdate1;
-    const reportDate2=req.body.rdate2;
-    const org=req.body.org_name;
-    console.log(reportDate1,reportDate2)
-    const data=await search.find({report_date:{$gte:reportDate1,$lte:reportDate2},organization_name:org})
-         
-    console.log(data)
-     res.json(data);
-  });
+  }
+});
+app.post('/inserthyroid', async (req, res) => {
 
-  app.post('/inserttestname',async(req,res)=>{
+  const organization_name = req.body.org_name;
+  const patient_id = req.body.patient_id;
+  const report_date = req.body.report_date;
+  const test_name = req.body.tname;
+  const T3 = req.body.T3;
+  const T4 = req.body.T4;
+  const thyroid_stimulating_hormone = req.body.thsh;
+
+  const des = req.body.comment;
+
+
+  const formData = new thy({
+    organization_name,
+    patient_id,
+    report_date,
+    test_name,
+    T3,
+    T4,
+    thyroid_stimulating_hormone,
+    des
+  })
+  console.log('Inserted data : ', formData)
+  try {
+    await formData.save();
+    res.send("inserted data")
+  } catch (err) {
+    console.log(err);
+
+  }
+});
+
+
+app.post('/insertkidneytest', async (req, res) => {
+
+  const organization_name = req.body.org_name;
+  const patient_id = req.body.patient_id;
+  const report_date = req.body.report_date;
+  const test_name = req.body.tname;
+  const colour = req.body.colour;
+  const appearance = req.body.appearance;
+  const specificgravity = req.body.specificgravity;
+  const pH = req.body.pH;
+  const glucose = req.body.glucose;
+  const protein = req.body.protein;
+  const ketones = req.body.ketones;
+  const blood = req.body.blood;
+  const bilirubin = req.body.bilirubin;
+  const urobilinogen = req.body.urobilinogen;
+  const leucocyte_esterase = req.body.leucocyte_esterase;
+  const nitrite = req.body.nitrite;
+  const pus_cells = req.body.pus_cells;
+  const redbloodcells = req.body.redbloodcells;
+  const epithelialcells = req.body.epithelialcells;
+  const casts = req.body.casts;
+  const crystals = req.body.crystals;
+  const yeast = req.body.yeast;
+  const bacteria = req.body.bacteria;
+
+  const des = req.body.comment;
+
+
+  const formData = new kidney({
+    organization_name,
+    patient_id,
+    report_date,
+    test_name,
+    colour,
+    appearance,
+    specificgravity,
+    pH,
+    glucose,
+    protein,
+    ketones,
+    blood,
+    bilirubin,
+    urobilinogen,
+    leucocyte_esterase,
+    nitrite,
+    pus_cells,
+    redbloodcells,
+    epithelialcells,
+    casts,
+    crystals,
+    yeast,
+    bacteria,
+    des
+  })
+  console.log('Inserted data : ', formData)
+  try {
+    await formData.save();
+    res.send("inserted data")
+  } catch (err) {
+    console.log(err);
+
+  }
+});
+
+app.post('/insertreportdate', async (req, res) => {
+
+  const reportDate1 = req.body.rdate1;
+  const reportDate2 = req.body.rdate2;
+  const org = req.body.org_name;
+  console.log(reportDate1, reportDate2)
+  const data = await search.find({ report_date: { $gte: reportDate1, $lte: reportDate2 }, organization_name: org })
+
+  console.log(data)
+  res.json(data);
+});
+
+app.post('/inserttestname', async (req, res) => {
 
 
   const fieldList = {
-    hemoglobin:['Hemoglobin','CBC'],
-    cbc:['CBC'],
-    rbc:['rbc','CBC'],
-    hct:['CBC'],
-    mcv:['CBC'],
-    mch:['CBC'],
-    mchc:['CBC'],
-    rdw_cv:['CBC'],
-    tlc:['CBC'],
-    t3:['Thyroid'],
-    t4:['Thyroid'],
-    thyroid_stimulating_hormone:['Thyroid'],
-    thyroid:['Thyroid'],
+    hemoglobin: ['Hemoglobin', 'CBC'],
+    cbc: ['CBC'],
+    rbc: ['rbc', 'CBC'],
+    hct: ['CBC'],
+    mcv: ['CBC'],
+    mch: ['CBC'],
+    mchc: ['CBC'],
+    rdw_cv: ['CBC'],
+    tlc: ['CBC'],
+    t3: ['Thyroid'],
+    t4: ['Thyroid'],
+    thyroid_stimulating_hormone: ['Thyroid'],
+    thyroid: ['Thyroid'],
   }
-    let testName=req.body.tname;
-    let org=req.body.org_name;
-    
-    let result = await Patient.find({test_name:{$in:fieldList[testName]}, organization_name:org})
-    console.log({testName})
-    console.log({result})
-    res.json(result);
+  let testName = req.body.tname;
+  let org = req.body.org_name;
 
-  });
-  app.post('/searchpatientid',async(req,res)=>{
+  let result = await Patient.find({ test_name: { $in: fieldList[testName] }, organization_name: org })
+  console.log({ testName })
+  console.log({ result })
+  res.json(result);
 
-    const patid=req.body.pid;
-    
-    const org=req.body.org_name;
-    const data=await search.find({patient_id:patid,organization_name:org})
-         
-    console.log(data)
-     res.json(data);
-  });
-  app.post('/searchpatientid&reportdate',async(req,res)=>{
+});
+app.post('/searchpatientid', async (req, res) => {
 
-    const patid=req.body.pid;
-    const reportDate1=req.body.rdate1;
-    const reportDate2=req.body.rdate2;
-    const org=req.body.org_name;
-    const data=await search.find({report_date:{$gte:reportDate1,$lte:reportDate2},organization_name:org,patient_id:patid})
-         
-    console.log(data)
-     res.json(data);
-  });
-  app.post('/getallorg',async(req,res)=>{
+  const patid = req.body.pid;
 
-    
-    const org=req.body.org_name;
-    const data=await search.find({organization_name:org})
-         
-    console.log(data)
-     res.json(data);
-  });
+  const org = req.body.org_name;
+  const data = await search.find({ patient_id: patid, organization_name: org })
 
-const port=4000;
+  console.log(data)
+  res.json(data);
+});
+app.post('/searchpatientid&reportdate', async (req, res) => {
+
+  const patid = req.body.pid;
+  const reportDate1 = req.body.rdate1;
+  const reportDate2 = req.body.rdate2;
+  const org = req.body.org_name;
+  const data = await search.find({ report_date: { $gte: reportDate1, $lte: reportDate2 }, organization_name: org, patient_id: patid })
+
+  console.log(data)
+  res.json(data);
+});
+app.post('/getallorg', async (req, res) => {
+
+
+  const org = req.body.org_name;
+  const data = await search.find({ organization_name: org })
+
+  console.log(data)
+  res.json(data);
+});
+
+const port = 4000;
 
 
 
@@ -397,13 +404,13 @@ app.listen(port, () => {
 });
 
 const Patient = require('./models/grandSchema')
-app.post('/getPatientData',async(req,res)=>{
+app.post('/getPatientData', async (req, res) => {
   const pid = req.body.pid
   console.log(pid)
   // res.send(pid)
   // cbc.find
   const data = await Patient.find({
-    patient_id:pid
+    patient_id: pid
   })
 
   res.send(data)
@@ -413,12 +420,12 @@ app.post('/getPatientData',async(req,res)=>{
 })
 
 // Chat section
-app.post('/getChatResponse', async(req,res)=>{
+app.post('/getChatResponse', async (req, res) => {
   const input = req.body.input
-    let {content} = await contextDetectionChain.invoke({question:"input"})
-    console.log({content})
-    const answer = content !== 'false' ? await runChat(input) : 'Out of context'
-    console.log({answer})
-    // res.send({answer:content})
-    res.send({answer})
+  let { content } = await contextDetectionChain.invoke({ question: "input" })
+  console.log({ content })
+  const answer = content !== 'false' ? await runChat(input) : 'Out of context'
+  console.log({ answer })
+  // res.send({answer:content})
+  res.send({ answer })
 })

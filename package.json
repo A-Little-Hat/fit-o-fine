@@ -6,7 +6,7 @@
     "concurrently": "^8.2.2"
   },
   "scripts": {
-    "setup": "npm i && npx truffle migrate && npm run server && npm run client && npm run clientMigrate",
+    "setup": "npm i && npm run server && npm run client && npm run clientMigrate",
     "server": "cd server && npm i",
     "client": "cd client && npm i",
     "clientMigrate": "cd client && npx truffle migrate",

@@ -187,6 +187,12 @@ contract Org{
         org.verified = true;                                    // setting the value of verified field of respective orgs
         emit VerifyOrganization("Organization update success");
     }
+    // rejectOrganization function is used to delete the organization from the mapping.
+    function rejectOrganization(address _address) public {
+        require(msg.sender == admin, "Only admin can reject Organization");
+        delete orgmap.values[_address]; // Delete the organization from the mapping
+        emit VerifyOrganization("Organization rejected");
+    }
 
     // Retrieves verified organizations. It means only the organizations with admin approval are to be returned.
     function getVerifiedOrganization() public view returns (Organization[] memory) {

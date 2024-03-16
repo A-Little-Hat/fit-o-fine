@@ -3,11 +3,16 @@ const mongoose = require('mongoose')
 const cors = require('cors');
 require('dotenv').config()
 const cbc = require('./models/cbcSchema')
+const axios = require('axios')
 const rbcs = require('./models/rbcSchema')
 const hmgg = require('./models/hemoglobinSchema')
 const kidney = require('./models/kidneyTestSchema')
 const thy = require('./models/thyroidSchema')
 const search = require('./models/reportDateSearchSchema')
+const Tesseract = require('tesseract.js');
+const multer = require('multer');
+const fs = require('fs');
+const upload = multer({ dest: 'uploads/' });
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -100,8 +105,8 @@ app.post('/addNewPatient', async (req, res) => {
   try {
     user.findOne({ userid: req.body.ID }).then((founduser) => {
       if (founduser) {
-        
-      }else {
+
+      } else {
         // await user.insertOne({userid:req.body.ID,password:req.body.pass })
         let username = new user({ userid: req.body.ID, password: req.body.pass })
         username.save()
@@ -429,3 +434,57 @@ app.post('/getChatResponse', async (req, res) => {
   // res.send({answer:content})
   res.send({ answer })
 })
+
+app.post('/extractTextFromImage', upload.single('image'), async (req, res) => {
+  try {
+    // Get the image from the request
+    let image = req.file;
+    console.log(image)
+    // Extract text using Tesseract.js
+    const { data: { text } } = await Tesseract.recognize(image.path, 'eng');
+    console.log({ text })
+    // delete file
+    fs.unlinkSync(image.path);
+    // data extract
+    // Split the text into lines
+    const lines = text.split('\n');
+
+    // Initialize an object to store parsed data
+    const parsedData = {};
+
+    // Iterate over each line and parse key-value pairs
+    lines.forEach(line => {
+      // Ignore empty lines
+      if (line.trim() !== '') {
+        // Split the line by ':' to separate key and value
+        const [key, value] = line.split(':');
+
+        // Trim leading and trailing whitespace from key and value
+        const trimmedKey = key.trim();
+        const trimmedValue = value.trim();
+
+        // Store the key-value pair in the parsed data object
+        parsedData[trimmedKey] = trimmedValue;
+      }
+    });
+    const formData = new hmgg({
+      organization_name: parsedData['Organization'],
+      patient_id: parsedData['Patient ID'],
+      report_date: parsedData['Date'],
+      test_name: parsedData['Test name'],
+      hemoglobin: parsedData['Hemoglobin'],
+      des: parsedData['Description']
+    })
+    console.log('Inserted data : ', formData)
+    try {
+      await formData.save();
+      res.send({text:"inserted data"})
+    } catch (err) {
+      console.log(err);
+  
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ text: 'Failed to extract text' });
+  }
+});

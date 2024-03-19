@@ -454,34 +454,74 @@ app.post('/extractTextFromImage', upload.single('image'), async (req, res) => {
 
     // Iterate over each line and parse key-value pairs
     lines.forEach(line => {
-      // Ignore empty lines
       if (line.trim() !== '') {
-        // Split the line by ':' to separate key and value
         const [key, value] = line.split(':');
-
-        // Trim leading and trailing whitespace from key and value
         const trimmedKey = key.trim();
         const trimmedValue = value.trim();
-
-        // Store the key-value pair in the parsed data object
         parsedData[trimmedKey] = trimmedValue;
       }
     });
-    const formData = new hmgg({
-      organization_name: parsedData['Organization'],
-      patient_id: parsedData['Patient ID'],
-      report_date: parsedData['Date'],
-      test_name: parsedData['Test name'],
-      hemoglobin: parsedData['Hemoglobin'],
-      des: parsedData['Description']
-    })
+    let formData;
+    if (parsedData['Test name'].toLowerCase() === 'hemoglobin') {
+      formData = new hmgg({
+        organization_name: parsedData['Organization'],
+        patient_id: parsedData['Patient ID'],
+        report_date: parsedData['Date'],
+        test_name: 'Hemoglobin',
+        hemoglobin: parsedData['Hemoglobin'],
+        des: parsedData['Description']
+      })
+    }
+    else if (parsedData['Test name'].toLowerCase() === 'thyroid') {
+      formData = new thy({
+        organization_name:parsedData['Organization'],
+        patient_id: parsedData['Patient ID'],
+        report_date: parsedData['Date'],
+        test_name: 'Thyroid',
+        T3: parsedData['T3'],
+        T4: parsedData['T4'],
+        thyroid_stimulating_hormone: parsedData['TSH'],
+        des: parsedData['Description']
+      })
+    }
+    else if (parsedData['Test name'].toLowerCase() === 'rbc') {
+      formData = new rbcs({
+        organization_name:parsedData['Organization'],
+        patient_id: parsedData['Patient ID'],
+        report_date: parsedData['Date'],
+        test_name: 'RBC',
+        rbc: parsedData['RBC'],
+        des: parsedData['Description']
+      })
+    }
+    else if (parsedData['Test name'].toLowerCase() === 'cbc') {
+      formData = new cbc({
+        organization_name: parsedData['Organization'],
+        patient_id: parsedData['Patient ID'],
+        report_date: parsedData['Date'],
+        test_name: 'CBC',
+        hemoglobin: parsedData['Hemoglobin'],
+        rbc: parsedData['RBC'],
+        hct: parsedData['HCT'],
+        mcv: parsedData['MCV'],
+        mch: parsedData['MCH'],
+        mchc: parsedData['MCHC'],
+        rdw_cv: parsedData['RDW CV'],
+        tlc: parsedData['TLC'],
+        des: parsedData['Description']
+      })
+    }
+    else{
+
+    }
+
     console.log('Inserted data : ', formData)
     try {
       await formData.save();
-      res.send({text:"inserted data"})
+      res.send({ text: "inserted data" })
     } catch (err) {
       console.log(err);
-  
+
     }
   } catch (error) {
     console.error(error);

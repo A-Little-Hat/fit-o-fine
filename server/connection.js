@@ -518,13 +518,13 @@ app.post('/extractTextFromImage', upload.single('image'), async (req, res) => {
     console.log('Inserted data : ', formData)
     try {
       await formData.save();
-      res.send({ text: "inserted data" })
+      res.status(200).send(true)
     } catch (err) {
       console.log(err);
 
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send({ text: 'Failed to extract text' });
+    res.status(500).send(false);
   }
 });

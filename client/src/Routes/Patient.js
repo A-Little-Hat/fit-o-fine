@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
 import Navbar from "../Components/Navbar";
-import moment from "moment";
 import axios from "axios";
 const Patient = ({ orgContract, web3, user }) => {
     const [data, setData] = useState(null);
@@ -38,9 +37,10 @@ const Patient = ({ orgContract, web3, user }) => {
                                 'age': patients[i]['age'],
                                 'mobno': patients[i]['mobno'],
                                 'email': patients[i]['email'],
-                                "report_date": moment.unix(patients[i]['report_date'] / 1000).format('DD/MM/YYYY'),
+                                "report_date": allorg.data[j]['report_date'],
+                                // "report_date": moment.unix(patients[i]['report_date'] / 1000).format('DD/MM/YYYY'),
                                 'test_name': allorg.data[j]['test_name'],
-                                'description': patients[i]['description'],
+                                'description': allorg.data[j]['des'],
                             })
                         }
                     }

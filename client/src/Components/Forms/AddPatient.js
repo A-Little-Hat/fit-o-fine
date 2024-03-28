@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { Form,Dropdown, Alert } from "react-bootstrap";
+import { Form,Dropdown } from "react-bootstrap";
 import Navbar from "../Navbar";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -123,7 +123,7 @@ const AddPatient=({orgContract,user})=>{
                     TLC:tlc,
                     comment:comment
                 })
-                Alert("added")
+                // Alert("added")
             };
         
             if(selectedValue==='RBC'){
@@ -135,7 +135,7 @@ const AddPatient=({orgContract,user})=>{
                     value:rbc1,
                     comment:comment,
                 })
-                Alert("added")
+                // Alert("added")
             };
             if(selectedValue==='Hemoglobin'){
                 axios.post('http://localhost:4000/inserthmg',{
@@ -146,7 +146,7 @@ const AddPatient=({orgContract,user})=>{
                     value:hemoglobin1,
                     comment:comment
                 })
-                Alert("added")
+                // Alert("added")
             }
             if(selectedValue==='Thyroid'){
                 axios.post('http://localhost:4000/inserthyroid',{
@@ -159,8 +159,8 @@ const AddPatient=({orgContract,user})=>{
                     thsh:thysti,
                     comment:comment
                 })
-                Alert("added")
             }
+            alert("added")
             
         }
       const handleOnSubmit=async(e) =>

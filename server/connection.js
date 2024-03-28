@@ -265,70 +265,70 @@ app.post('/inserthyroid', async (req, res) => {
 });
 
 
-app.post('/insertkidneytest', async (req, res) => {
+// app.post('/insertkidneytest', async (req, res) => {
 
-  const organization_name = req.body.org_name;
-  const patient_id = req.body.patient_id;
-  const report_date = req.body.report_date;
-  const test_name = req.body.tname;
-  const colour = req.body.colour;
-  const appearance = req.body.appearance;
-  const specificgravity = req.body.specificgravity;
-  const pH = req.body.pH;
-  const glucose = req.body.glucose;
-  const protein = req.body.protein;
-  const ketones = req.body.ketones;
-  const blood = req.body.blood;
-  const bilirubin = req.body.bilirubin;
-  const urobilinogen = req.body.urobilinogen;
-  const leucocyte_esterase = req.body.leucocyte_esterase;
-  const nitrite = req.body.nitrite;
-  const pus_cells = req.body.pus_cells;
-  const redbloodcells = req.body.redbloodcells;
-  const epithelialcells = req.body.epithelialcells;
-  const casts = req.body.casts;
-  const crystals = req.body.crystals;
-  const yeast = req.body.yeast;
-  const bacteria = req.body.bacteria;
+//   const organization_name = req.body.org_name;
+//   const patient_id = req.body.patient_id;
+//   const report_date = req.body.report_date;
+//   const test_name = req.body.tname;
+//   const colour = req.body.colour;
+//   const appearance = req.body.appearance;
+//   const specificgravity = req.body.specificgravity;
+//   const pH = req.body.pH;
+//   const glucose = req.body.glucose;
+//   const protein = req.body.protein;
+//   const ketones = req.body.ketones;
+//   const blood = req.body.blood;
+//   const bilirubin = req.body.bilirubin;
+//   const urobilinogen = req.body.urobilinogen;
+//   const leucocyte_esterase = req.body.leucocyte_esterase;
+//   const nitrite = req.body.nitrite;
+//   const pus_cells = req.body.pus_cells;
+//   const redbloodcells = req.body.redbloodcells;
+//   const epithelialcells = req.body.epithelialcells;
+//   const casts = req.body.casts;
+//   const crystals = req.body.crystals;
+//   const yeast = req.body.yeast;
+//   const bacteria = req.body.bacteria;
 
-  const des = req.body.comment;
+//   const des = req.body.comment;
 
 
-  const formData = new kidney({
-    organization_name,
-    patient_id,
-    report_date,
-    test_name,
-    colour,
-    appearance,
-    specificgravity,
-    pH,
-    glucose,
-    protein,
-    ketones,
-    blood,
-    bilirubin,
-    urobilinogen,
-    leucocyte_esterase,
-    nitrite,
-    pus_cells,
-    redbloodcells,
-    epithelialcells,
-    casts,
-    crystals,
-    yeast,
-    bacteria,
-    des
-  })
-  console.log('Inserted data : ', formData)
-  try {
-    await formData.save();
-    res.send("inserted data")
-  } catch (err) {
-    console.log(err);
+//   const formData = new kidney({
+//     organization_name,
+//     patient_id,
+//     report_date,
+//     test_name,
+//     colour,
+//     appearance,
+//     specificgravity,
+//     pH,
+//     glucose,
+//     protein,
+//     ketones,
+//     blood,
+//     bilirubin,
+//     urobilinogen,
+//     leucocyte_esterase,
+//     nitrite,
+//     pus_cells,
+//     redbloodcells,
+//     epithelialcells,
+//     casts,
+//     crystals,
+//     yeast,
+//     bacteria,
+//     des
+//   })
+//   console.log('Inserted data : ', formData)
+//   try {
+//     await formData.save();
+//     res.send("inserted data")
+//   } catch (err) {
+//     console.log(err);
 
-  }
-});
+//   }
+// });
 
 app.post('/insertreportdate', async (req, res) => {
 
@@ -343,12 +343,11 @@ app.post('/insertreportdate', async (req, res) => {
 });
 
 app.post('/inserttestname', async (req, res) => {
-
-
+  // knowledge base
   const fieldList = {
     hemoglobin: ['Hemoglobin', 'CBC'],
     cbc: ['CBC'],
-    rbc: ['rbc', 'CBC'],
+    rbc: ['RBC', 'CBC'],
     hct: ['CBC'],
     mcv: ['CBC'],
     mch: ['CBC'],

@@ -25,7 +25,7 @@ const ImageTextExtractor = ({toggleModal}) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      res ? alert("uploaded") : alert('Failed to extract text from image!');
+      res ? alert("uploaded.!! Kindly reload to reflect the changes") : alert('Failed to extract text from image!');
       setImage(null)
       document.getElementById('inputForm').value=''
       toggleModal(event)

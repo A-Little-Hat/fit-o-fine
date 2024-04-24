@@ -5,6 +5,7 @@ require('dotenv').config()
 const cbc = require('./models/cbcSchema')
 const axios = require('axios')
 const rbcs = require('./models/rbcSchema')
+const prescriptionSchema = require('./models/prescriptionSchema')
 const hmgg = require('./models/hemoglobinSchema')
 const kidney = require('./models/kidneyTestSchema')
 const thy = require('./models/thyroidSchema')
@@ -24,7 +25,7 @@ mongoose.connect(process.env.MONGO_DB_URL, { useNewurlParser: true });
 const MODEL_NAME = "gemini-1.0-pro";
 const API_KEY = process.env.GEMINI_API_KEY;
 
-const genAI = new GoogleGenerativeAI(API_KEY);
+const genAI = new GoogleGenerativeAI(apiKey= API_KEY);
 const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
 const generationConfig = {
@@ -84,7 +85,13 @@ const contextDetectionChain = contextDetectionPrompt.pipe(chatModel)
 async function runChat(input) {
   const result = await chat.sendMessage(input);
   const response = result.response;
-  const data = !response.promptFeedback.blockReason ? response.text() : "INVALID QUERY"
+  let data = ""
+  try {
+    data = response.text()
+  } catch (error) {
+    data ="INVALID QUERY"
+  }
+  // const data = !response.promptFeedback.blockReason ? response.text() : "INVALID QUERY"
   return (data);
 }
 
@@ -461,10 +468,22 @@ app.post('/extractTextFromImage', upload.single('image'), async (req, res) => {
       }
     });
     let formData;
+    let id = ""
+    if(parsedData['Patient ID']){
+      id = parsedData['Patient ID']
+    }else if(parsedData['patient ID']){
+      id = parsedData['patient ID']
+    }else if(parsedData['Patient id']){
+      id = parsedData['Patient id']
+    }else if(parsedData['patient id']){
+      id = parsedData['patient id']
+    }else{
+      res.status(500).send(false);
+    } 
     if (parsedData['Test name'].toLowerCase() === 'hemoglobin') {
       formData = new hmgg({
         organization_name: parsedData['Organization'],
-        patient_id: parsedData['Patient ID'],
+        patient_id: id,
         report_date: parsedData['Date'],
         test_name: 'Hemoglobin',
         hemoglobin: parsedData['Hemoglobin'],
@@ -474,7 +493,7 @@ app.post('/extractTextFromImage', upload.single('image'), async (req, res) => {
     else if (parsedData['Test name'].toLowerCase() === 'thyroid') {
       formData = new thy({
         organization_name:parsedData['Organization'],
-        patient_id: parsedData['Patient ID'],
+        patient_id: id,
         report_date: parsedData['Date'],
         test_name: 'Thyroid',
         T3: parsedData['T3'],
@@ -486,7 +505,7 @@ app.post('/extractTextFromImage', upload.single('image'), async (req, res) => {
     else if (parsedData['Test name'].toLowerCase() === 'rbc') {
       formData = new rbcs({
         organization_name:parsedData['Organization'],
-        patient_id: parsedData['Patient ID'],
+        patient_id: id,
         report_date: parsedData['Date'],
         test_name: 'RBC',
         rbc: parsedData['RBC'],
@@ -496,7 +515,7 @@ app.post('/extractTextFromImage', upload.single('image'), async (req, res) => {
     else if (parsedData['Test name'].toLowerCase() === 'cbc') {
       formData = new cbc({
         organization_name: parsedData['Organization'],
-        patient_id: parsedData['Patient ID'],
+        patient_id: id,
         report_date: parsedData['Date'],
         test_name: 'CBC',
         hemoglobin: parsedData['Hemoglobin'],
@@ -511,9 +530,10 @@ app.post('/extractTextFromImage', upload.single('image'), async (req, res) => {
       })
     }
     else{
-
+      res.status(500).send(false);
     }
 
+    console.log('id data : ', id)
     console.log('Inserted data : ', formData)
     try {
       await formData.save();
@@ -525,5 +545,66 @@ app.post('/extractTextFromImage', upload.single('image'), async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send(false);
+  }
+});
+
+app.post('/reportUpload', upload.single('image'), async (req, res) => {
+  try {
+    const { patientId } = req.body;
+    if (!req.file) {
+      return res.status(400).send(false);
+    }
+
+    const prescription = new prescriptionSchema({
+      patient_id: patientId,
+      filename: req.file.originalname,
+      contentType: req.file.mimetype,
+      image: fs.readFileSync(req.file.path)
+    });
+
+    // Save image to MongoDB
+    await prescription.save();
+
+    // Remove temporary file
+    fs.unlinkSync(req.file.path);
+
+    res.status(200).send(true);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(false);
+  }
+});
+
+// Assuming 'patientId' is a string parameter
+app.get('/getPrescription/:patientId', async (req, res) => {
+  try {
+    const { patientId } = req.params;
+
+    // Retrieve all prescriptions for the given patient_id
+    const prescriptions = await prescriptionSchema.find({ patient_id: patientId });
+    // let data = prescriptions[1]
+    // // Assume 'imageData' is your image buffer
+    // data = Buffer.from(data.image);
+
+    // // Convert the image buffer to a base64-encoded string
+    // data = data.toString('base64');
+
+    let response = []
+    prescriptions.map(p => {
+      let data = Buffer.from(p.image);
+      data = data.toString('base64');
+      response.push({
+        patient_id:p.patient_id,
+        filename:p.filename,
+        contentType:p.contentType,
+        data:data
+      })
+    });
+    res.json({response})
+    // console.log({prescriptions})
+    // res.json({ prescriptions });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
   }
 });

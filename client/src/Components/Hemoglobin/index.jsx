@@ -21,7 +21,7 @@ const Hemoglobin = ({ data }) => {
                                     <td>test_name</td>
                                     <td>hemoglobin</td>
                                     <td>des</td>
-                                    <td>View Report</td>
+                                    {/* <td>View Report</td> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -34,7 +34,7 @@ const Hemoglobin = ({ data }) => {
                                             <td>{e['test_name']}</td>
                                             <td>{e['hemoglobin']}</td>
                                             <td>{e['des']}</td>
-                                            <td><button onClick={(e) => view(e,index)}>View</button></td>
+                                            {/* <td><button onClick={(e) => view(e,index)}>View</button></td> */}
                                         </tr>
                                     ))
                                 }

@@ -5,61 +5,20 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Fit-O-Fine</title>
-   <style>
-      body {
-         font-family: Arial, sans-serif;
-         margin: 0;
-         padding: 0;
-         display: flex;
-         justify-content: center;
-         /* align-items: center; */
-         height: 100vh;
-         background-color: #f8f8f8;
-      }
-
-      .container {
-         text-align: center;
-      }
-
-      a {
-         text-decoration: none;
-         color: #333;
-      }
-
-      button {
-         padding: 10px 20px;
-         margin: 10px;
-         border: none;
-         border-radius: 5px;
-         background-color: #007bff;
-         color: #fff;
-         cursor: pointer;
-         transition: background-color 0.3s;
-      }
-
-      button:hover {
-         background-color: #0056b3;
-      }
-
-      .title {
-         font-size: xx-large;
-      }
-
-      
-   </style>
+   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
    <div class="container">
-      <div class="title">
-         <p>Fit-O-Fine</p>
-      </div>
-      <div class="link">
-         <a href="./web/setup.html"><button>Setup</button></a>
-         <a href="./web/userManual.html"><button>User Manual</button></a>
-         <a href="./web/appFlow.html"><button>App Flow</button></a>
-         <a href="./web/fieldSet.html"><button>FieldSet</button></a>
-      </div>
+      <nav class="navbar">
+         <p><a href="index.html">Fit-O-Fine</a></p>
+         <ul class="nav-links">
+            <li><a href="./web/setup.html">Setup</a></li>
+            <li><a href="./web/userManual.html">User Manual</a></li>
+            <li><a href="./web/appFlow.html">App Flow</a></li>
+            <li><a href="./web/fieldSet.html">FieldSet</a></li>
+         </ul>
+      </nav>
    </div>
 </body>
 
